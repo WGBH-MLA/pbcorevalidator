@@ -215,9 +215,9 @@ class Validator
 	['extensionElement','extensionValue'].each do |subname|  check_only_one_subelement('extensionWrap',subname.split(),"must contain one '#{subname}' subelement.") ; end ;
 
 
-    check_valid_characters(['instantiationFileSize', 'instantiationDataRate', 'essenceTrackDataRate', 'essenceTrackFrameRate', 'essenceTrackPlaybackSpeed', 'essenceTrackSamplingRate', 'essenceTrackBitDepth', 'essenceTrackFrameSize', 'essenceTrackAspectRatio'],"g/[0-9]:x\///", msg = "For best practice, this technical element should only contain numeric values. To express a unit of measure for this element, we recommend using the @unitsOfMeasure attribute.")
-    check_valid_characters(['instantiationTimeStart', 'instantiationDuration', 'essenceTrackTimeStart', 'essenceTrackDuration'],"g/[0-9]:\.//", msg = "This is valid, but we recommend using a timestamp format for this element, such as HH:MM:SS:FF or HH:MM:SS.mmm or S.mmm.")
-    check_valid_length_codes(['instantiationLanguage', 'essenceTrackLanguage'], ';', "For valid PBCore, please use one of the ISO 639.2 or 639.3 standard language codes, which can be found at http://www.loc.gov/standards/iso639-2/ and http://www-01.sil.org/iso639-3/codes.asp. You can describe more than one language in the element by separating two three-letter codes with a semicolon, i.e. eng;fre.")
+    check_valid_characters(['instantiationFileSize', 'instantiationDataRate', 'essenceTrackDataRate', 'essenceTrackFrameRate', 'essenceTrackPlaybackSpeed', 'essenceTrackSamplingRate', 'essenceTrackBitDepth', 'essenceTrackFrameSize', 'essenceTrackAspectRatio'],"g/[0-9]:x.\///", msg = "For best practice, this technical element should only contain numeric values. To express a unit of measure for this element, we recommend using the @unitsOfMeasure attribute.")
+    check_valid_characters(['instantiationTimeStart', 'instantiationDuration', 'essenceTrackTimeStart', 'essenceTrackDuration'],"g/[0-9]:;\.//", msg = "Best practice is to use a timestamp format for this element, such as HH:MM:SS:FF or HH:MM:SS.mmm or S.mmm.")
+    check_valid_length_codes(['instantiationLanguage', 'essenceTrackLanguage'], ';', "Best practice is to use one of the ISO 639.2 or 639.3 standard language codes, which can be found at http://www.loc.gov/standards/iso639-2/ and http://www-01.sil.org/iso639-3/codes.asp. You can describe more than one language in the element by separating two three-letter codes with a semicolon, i.e. eng;fre.")
 
     # sort the error messages by line number
     tmperrors=[]
@@ -370,7 +370,7 @@ class Validator
     elements_array.each do |elt|
 		each_elt(elt.to_s) do |node|
 			if node.content.tr(validstring,"") != ""
-				@errors << "Element '#{node.name}' at line #{node.line_num} contains invalid #{node.content.tr(validstring,"").length} characters.  " + msg.to_s
+				@errors << "Element '#{node.name}' at line #{node.line_num} contains unexpected #{node.content.tr(validstring,"").length} characters.  " + msg.to_s
 			end
 		end
 	end
@@ -381,7 +381,7 @@ class Validator
 		each_elt(elt.to_s) do |node|
 			xcount=node.content.split(delimiter).select{|x| x.length < 2 || x.length > 3}.length
 			if xcount != 0
-				@errors << "Element '#{node.name}' at line #{node.line_num} contains #{xcount} invalid value#{'s' if xcount > 1}.  " + msg.to_s
+				@errors << "Element '#{node.name}' at line #{node.line_num} contains #{xcount} unexpected value#{'s' if xcount > 1}.  " + msg.to_s
 			end
 		end
 	end
