@@ -167,28 +167,20 @@ class Validator
     @practices_checked = true
 
 
-    check_picklist('assetType', Picklists::ASSET_TYPES)
-    check_picklist('dateType', Picklists::DATE_TYPES)
-    check_picklist('titleType', Picklists::TITLE_TYPES)
+    check_picklist('assetType', Picklists::ASSET_TYPES , 'http://pbcore.org/pbcore-controlled-vocabularies/.')
+    check_picklist('dateType', Picklists::DATE_TYPES , 'http://pbcore.org/pbcore-controlled-vocabularies/datetype-vocabulary/.')
+    check_picklist('titleType', Picklists::TITLE_TYPES , 'http://pbcore.org/pbcore-controlled-vocabularies/titletype-vocabulary/.')
     check_lists('subject')
-    check_picklist('descriptionType', Picklists::DESCRIPTION_TYPES)
-#    check_picklist('genre', Picklists::GENRES)
-    check_picklist('relationType', Picklists::RELATION_TYPES)
-#    check_picklist('audienceLevel', Picklists::AUDIENCE_LEVELS)
-#    check_picklist('audienceRating', Picklists::AUDIENCE_RATINGS)
-    check_picklist('creatorRole', Picklists::ROLES)
-    check_picklist('contributorRole', Picklists::ROLES)
-    check_picklist('publisherRole', Picklists::PUBLISHER_ROLES)
-    check_picklist('formatPhysical', Picklists::PHYSICAL_FORMATS)
-    check_picklist('formatDigital', Picklists::DIGITAL_FORMATS)
-    check_picklist('instantiationPhysical', Picklists::PHYSICAL_FORMATS)
-    check_picklist('instantiationDigital', Picklists::DIGITAL_FORMATS)
-    check_picklist('formatMediaType', Picklists::MEDIA_TYPES)
-    check_picklist('instantiationMediaType', Picklists::MEDIA_TYPES , 'You’re using a value for instantiationMediaType that is neither Moving Image nor Audio. While this is valid, we recommend using one of the standardized values from the controlled vocabulary for this element: http://pbcore.org/pbcore-controlled-vocabularies/instantiationmediatype-vocabulary/' )
-    check_picklist('coverageType', Picklists::COVERAGE_TYPES , 'It looks like you’re using a value for coverageType that is neither Spatial nor Temporal. For valid PBCore, you must use one of the standardized values from the controlled vocabulary for this element: http://metadataregistry.org/concept/list/vocabulary_id/149.html' )
-    check_picklist('formatGenerations', Picklists::GENERATIONS)
-#    check_picklist('formatColors', Picklists::FORMAT_COLORS)
-#    check_picklist('essenceTrackType', Picklists::ESSENCE_TRACK_TYPES)
+    check_picklist('descriptionType', Picklists::DESCRIPTION_TYPES , 'http://pbcore.org/pbcore-controlled-vocabularies/descriptiontype-vocabulary/.')
+    check_picklist('relationType', Picklists::RELATION_TYPES , 'http://pbcore.org/pbcore-controlled-vocabularies/pbcorerelationtype-vocabulary/ and http://pbcore.org/pbcore-controlled-vocabularies/instatiationrelationtype-vocabulary/')
+    check_picklist('creatorRole', Picklists::ROLES , 'http://pbcore.org/pbcore-controlled-vocabularies/creatorrole-and-contributorrole-vocabulary/.')
+    check_picklist('contributorRole', Picklists::ROLES , 'http://pbcore.org/pbcore-controlled-vocabularies/creatorrole-and-contributorrole-vocabulary/.')
+    check_picklist('publisherRole', Picklists::PUBLISHER_ROLES , 'http://pbcore.org/pbcore-controlled-vocabularies/publisherrole-vocabulary/.')
+    check_picklist('formatPhysical', Picklists::PHYSICAL_FORMATS , 'Audio: http://pbcore.org/pbcore-controlled-vocabularies/instantiationphysical-audio-vocabulary/, Film: http://pbcore.org/pbcore-controlled-vocabularies/instantiationphysical-film-vocabulary/. and Video: http://pbcore.org/pbcore-controlled-vocabularies/instantiationphysical-video-vocabulary/.')
+    check_picklist('instantiationPhysical', Picklists::PHYSICAL_FORMATS , 'Audio: http://pbcore.org/pbcore-controlled-vocabularies/instantiationphysical-audio-vocabulary/, Film: http://pbcore.org/pbcore-controlled-vocabularies/instantiationphysical-film-vocabulary/. and Video: http://pbcore.org/pbcore-controlled-vocabularies/instantiationphysical-video-vocabulary/.')
+    check_picklist('formatMediaType', Picklists::MEDIA_TYPES , 'http://pbcore.org/pbcore-controlled-vocabularies/instantiationmediatype-vocabulary/.')
+    check_picklist('instantiationMediaType', Picklists::MEDIA_TYPES, 'http://pbcore.org/pbcore-controlled-vocabularies/instantiationmediatype-vocabulary/.')
+    check_picklist('coverageType', Picklists::COVERAGE_TYPES)
 #    check_names('creator')
 #    check_names('contributor')
 #    check_names('publisher')
@@ -223,9 +215,9 @@ class Validator
 	['extensionElement','extensionValue'].each do |subname|  check_only_one_subelement('extensionWrap',subname.split(),"must contain one '#{subname}' subelement.") ; end ;
 
 
-    check_valid_characters(['instantiationFileSize', 'instantiationDataRate', 'essenceTrackDataRate', 'essenceTrackFrameRate', 'essenceTrackPlaybackSpeed', 'essenceTrackSamplingRate', 'essenceTrackBitDepth', 'essenceTrackFrameSize', 'essenceTrackAspectRatio'],"g/[0-9]:x\///", msg = "For best practice, this technical element should only contain numeric values. To express a unit of measure for this element, we recommend using the @unitsOfMeasure attribute.")
-    check_valid_characters(['instantiationTimeStart', 'instantiationDuration', 'essenceTrackTimeStart', 'essenceTrackDuration'],"g/[0-9]:\.//", msg = "This is valid, but we recommend using a timestamp format for this element, such as HH:MM:SS:FF or HH:MM:SS.mmm or S.mmm.")
-    check_valid_length_codes(['instantiationLanguage', 'essenceTrackLanguage'], ';', "For valid PBCore, please use one of the ISO 639.2 or 639.3 standard language codes, which can be found at http://www.loc.gov/standards/iso639-2/ and http://www-01.sil.org/iso639-3/codes.asp. You can describe more than one language in the element by separating two three-letter codes with a semicolon, i.e. eng;fre.")
+    check_valid_characters(['instantiationFileSize', 'instantiationDataRate', 'essenceTrackDataRate', 'essenceTrackFrameRate', 'essenceTrackPlaybackSpeed', 'essenceTrackSamplingRate', 'essenceTrackBitDepth', 'essenceTrackFrameSize', 'essenceTrackAspectRatio'],"g/[0-9]:x.\///", msg = "For best practice, this technical element should only contain numeric values. To express a unit of measure for this element, we recommend using the @unitsOfMeasure attribute.")
+    check_valid_characters(['instantiationTimeStart', 'instantiationDuration', 'essenceTrackTimeStart', 'essenceTrackDuration'],"g/[0-9]:;\.//", msg = "Best practice is to use a timestamp format for this element, such as HH:MM:SS:FF or HH:MM:SS.mmm or S.mmm.")
+    check_valid_length_codes(['instantiationLanguage', 'essenceTrackLanguage'], ';', "Best practice is to use one of the ISO 639.2 or 639.3 standard language codes, which can be found at http://www.loc.gov/standards/iso639-2/ and http://www-01.sil.org/iso639-3/codes.asp. You can describe more than one language in the element by separating two three-letter codes with a semicolon, i.e. eng;fre.")
 
     # sort the error messages by line number
     tmperrors=[]
@@ -290,7 +282,7 @@ class Validator
       if node.content.strip.empty?
         @errors << "#{elt} on #{node.line_num} is empty. Perhaps consider leaving that element out instead."
       elsif !picklist.any?{|i| i.downcase == node.content.downcase}
-        @errors << "“#{node.content}” on line #{node.line_num} is not in the PBCore suggested picklist value for #{elt}.  " + msg.to_s
+        @errors << "“#{node.content}” on line #{node.line_num} is not in the PBCore suggested controlled vocabulary for #{elt}. While that is valid, you may want to see if there is an appropriate term in the vocabulary here: " + msg.to_s
       end
     end
     check_lists(elt)
@@ -378,7 +370,7 @@ class Validator
     elements_array.each do |elt|
 		each_elt(elt.to_s) do |node|
 			if node.content.tr(validstring,"") != ""
-				@errors << "Element '#{node.name}' at line #{node.line_num} contains invalid #{node.content.tr(validstring,"").length} characters.  " + msg.to_s
+				@errors << "Element '#{node.name}' at line #{node.line_num} contains unexpected #{node.content.tr(validstring,"").length} characters.  " + msg.to_s
 			end
 		end
 	end
@@ -389,7 +381,7 @@ class Validator
 		each_elt(elt.to_s) do |node|
 			xcount=node.content.split(delimiter).select{|x| x.length < 2 || x.length > 3}.length
 			if xcount != 0
-				@errors << "Element '#{node.name}' at line #{node.line_num} contains #{xcount} invalid value#{'s' if xcount > 1}.  " + msg.to_s
+				@errors << "Element '#{node.name}' at line #{node.line_num} contains #{xcount} unexpected value#{'s' if xcount > 1}.  " + msg.to_s
 			end
 		end
 	end
