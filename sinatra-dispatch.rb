@@ -49,6 +49,8 @@ post '/validator' do
     halt "You must provide a PBCore document either by file upload or by pasting into the textarea."
   end
 
+  @errors = @validator.errors
+
   haml :htmlout
 end
 
