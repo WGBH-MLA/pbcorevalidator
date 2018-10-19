@@ -19,45 +19,46 @@
 
 $: << File.expand_path(File.dirname(__FILE__))
 
+require 'sinatra'
 require 'bundler'
 require 'cgi'
 Bundler.require
-
 require 'lib/validator'
+require 'haml'
 
 class App < Sinatra::Application
 
-get '/' do
-  haml :index
-end
-
-get '/validator' do
-  "Sorry, only POST is supported."
-end
-
-post '/validator' do
-  version = params[:version]
-  unless (version && Validator::PBCORE_VERSIONS[version])
-    halt "You must select a PBCore version to validate against." and return
+  get '/' do
+    haml :index
   end
 
-  if params[:file] && params[:file][:tempfile] && params[:file][:tempfile].size > 0
-    @validator = Validator.new(params[:file][:tempfile], version)
-  elsif !params[:textarea].strip.empty?
-    @validator = Validator.new(params[:textarea], version)
-  else
-    halt "You must provide a PBCore document either by file upload or by pasting into the textarea."
+  get '/validator' do
+    "Sorry, only POST is supported."
   end
 
-  @errors = @validator.errors
+  post '/validator' do
+    version = params[:version]
+    unless (version && Validator::PBCORE_VERSIONS[version])
+      halt "You must select a PBCore version to validate against." and return
+    end
 
-  haml :htmlout
-end
+    if params[:file] && params[:file][:tempfile] && params[:file][:tempfile].size > 0
+      @validator = Validator.new(params[:file][:tempfile], version)
+    elsif !params[:textarea].strip.empty?
+      @validator = Validator.new(params[:textarea], version)
+    else
+      halt "You must provide a PBCore document either by file upload or by pasting into the textarea."
+    end
 
-get '/css' do
-  content_type "text/css", :charset => "utf-8"
-  response['Cache-Control'] = 'public, max-age=7200'
-  sass :style
-end
+    @errors = @validator.errors
+
+    haml :validator
+  end
+
+  get '/css' do
+    content_type "text/css", :charset => "utf-8"
+    response['Cache-Control'] = 'public, max-age=7200'
+    sass :style
+  end
 
 end
