@@ -1,31 +1,42 @@
-- if @validator.valid?
-  %div{style: 'padding-left: 1.6em; padding-right: 1.6em; padding-top: 1.6em; padding-bottom: 2em; background-color: #eee; margin-bottom: 1%;'}
+- if @validator && @validator.valid?
+  %div{class: 'box-gray'}
     %p
       %span.success Congratulations!
       I couldn't find any errors in the PBCore document you provided. Hooray!
 - elsif @errors
-  %div{style: 'padding-left: 1.6em; padding-right: 1.6em; padding-top: 0.2em; padding-bottom: 0.6em; background-color: #eee; margin-bottom: 1%;'}
+  %div{class: 'box-gray'}
     %p{ style: 'font-size: 28px;' }
       %span.failure Sorry.
       The following potential errors were found in your PBCore document:
-  %div{style: 'padding-left: 1.6em; padding-right: 1.6em; padding-top: 0.2em; padding-bottom: 0.6em; background-color: #eee; margin-bottom: 1%;'}
-    %h2#errors
-
-    - if @errors[:xml].first
+  - if @errors[:xml] && @errors[:xml].first
+    %div{class: 'box-gray'}
       %h2
         PBCore Schema Errors
       %ul
         - @errors[:xml].each do |error|
           %li&= error
 
-  %div{style: 'padding-left: 1.6em; padding-right: 1.6em; padding-top: 0.2em; padding-bottom: 0.6em; background-color: #eee; margin-bottom: 1%;'}
-    - if @errors[:best_practices].first
+  - if @errors[:best_practices] && @errors[:best_practices].first
+    %div{class: 'box-gray'}
       %h2
         Best Practices
       %ul
         - @errors[:best_practices].each do |error|
           %li&= error
 
-    - if !@validator.valid_xml?
+  - if @errors[:fail] && @errors[:fail].first
+    %div{class: 'box-gray'}
+
+      %h2
+        Input Failure
+      %ul
+        - @errors[:fail].each do |error|
+          %li&= error
+
+  - if @validator && !@validator.valid_xml?
+    %div{class: 'box-gray'}
       %p
         Note that these errors indicate that your input could not even be parsed as XML. Please fix those errors in order to allow the PBCore-specific checks to be run.
+
+%a{href: '/', class: 'button'}
+  Go Back
