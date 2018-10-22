@@ -140,7 +140,7 @@ class Validator
   # io_or_document can either be an IO object or a String containing an XML document.
   def initialize(io_or_document, pbcore_version = "2.1")
     XML.default_line_numbers = true
-    @errors = []
+    @errors = {best_practices: [], xml: []}
     @pbcore_version = pbcore_version
     set_rxml_error do
       @xml = io_or_document.respond_to?(:read) ?
@@ -238,7 +238,7 @@ class Validator
   def valid?
     checkschema
     checkbestpractices
-    @errors.empty?
+    @errors[:best_practices].empty? && @errors[:xml].empty?
   end
 
   # returns true iff the document is at least some valid form of XML
@@ -273,16 +273,16 @@ class Validator
   end
 
   def rxml_error(err) #:nodoc:
-    @errors << err
+    @errors[:xml] << err
   end
 
   private
   def check_picklist(elt, picklist, msg = "")
     each_elt(elt) do |node|
       if node.content.strip.empty?
-        @errors << "#{elt} on #{node.line_num} is empty. Perhaps consider leaving that element out instead."
+        @errors[:best_practices] << "#{elt} on #{node.line_num} is empty. Perhaps consider leaving that element out instead."
       elsif !picklist.any?{|i| i.downcase == node.content.downcase}
-        @errors << "“#{node.content}” on line #{node.line_num} is not in the PBCore suggested controlled vocabulary for #{elt}. While that is valid, you may want to see if there is an appropriate term in the vocabulary here: " + msg.to_s
+        @errors[:best_practices] << "“#{node.content}” on line #{node.line_num} is not in the PBCore suggested controlled vocabulary for #{elt}. While that is valid, you may want to see if there is an appropriate term in the vocabulary here: " + msg.to_s
       end
     end
     check_lists(elt)
@@ -291,31 +291,20 @@ class Validator
   def check_lists(elt)
     each_elt(elt) do |node|
       if node.content =~ /[,|;]/
-        @errors << "In #{elt} on line #{node.line_num}, you have entered “#{node.content}”, which looks like it may be a list. It is preferred instead to repeat the containing element."
+        @errors[:best_practices] << "In #{elt} on line #{node.line_num}, you have entered “#{node.content}”, which looks like it may be a list. It is preferred instead to repeat the containing element."
       end
     end
   end
-
-  # look for "Mike Castleman" and remind the user to say "Castleman, Mike" instead.
-  # def check_names(elt)
-    # each_elt(elt) do |node|
-    #  if node.content =~ /^(\w+\.?(\s\w+\.?)?)\s+(\w+)$/
-    #    @errors << "It looks like the #{elt} “#{node.content}” on line #{node.line_num} might be a person's name. If it is, then it is preferred to have it like “#{$3}, #{$1}”."
-    #  end
-  #  end
-#  end
-
   # ensure that no single instantiation has both a formatDigital and a formatPhysical
   def check_only_one_format
     each_elt("pbcoreInstantiation") do |node|
       if node.find(".//pbcore:formatDigital", "pbcore:#{PBCORE_NAMESPACE}").size > 0 &&
           node.find(".//pbcore:formatPhysical", "pbcore:#{PBCORE_NAMESPACE}").size > 0
-        @errors << "It looks like the instantiation on line #{node.line_num} contains both a formatDigital and a formatPhysical element. This is valid, but not recommended in PBCore XML."
+        @errors[:best_practices] << "It looks like the instantiation on line #{node.line_num} contains both a formatDigital and a formatPhysical element. This is valid, but not recommended in PBCore XML."
       else
       if node.find(".//pbcore:instantiationDigital", "pbcore:#{PBCORE_NAMESPACE}").size > 0 &&
           node.find(".//pbcore:instantiationPhysical", "pbcore:#{PBCORE_NAMESPACE}").size > 0
-        @errors << "It looks like the instantiation on line #{node.line_num} contains both a instantiationDigital and a instantiationPhysical element. This is valid, but not recommended in PBCore XML."
-      end
+        @errors[:best_practices] << "It looks like the instantiation on line #{node.line_num} contains both a instantiationDigital and a instantiationPhysical element. This is valid, but not recommended in PBCore XML."
       end
     end
   end

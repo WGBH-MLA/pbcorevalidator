@@ -1,29 +1,29 @@
-:textile
+%div{class: 'box-gray'}
   This is a tool to validate PBCore xml documents against any version of the PBCore schema.
-  It will tell you if you have valid PBCore xml and will recommend best practices and controlled vocabulary terms.
+  It will tell you if you have valid PBCore xml, and will recommend best practices and controlled vocabulary terms.
 
+%div{class: 'box-gray'}
+  %h2 Validate a document
+  %form{ :action => "/validator", :method => "post", :enctype => "multipart/form-data" }
+    %p
+      %label{ for: "file" } Select a file to validate:
+      %input{ id: "file", name: "file", type: "file" }
+    %p
+      %label{ style: 'padding-bottom: 1em;', for: "textarea" } <strong>or</strong> paste a PBCore document into the textbox:
+      %textarea{ style: 'padding-bottom: 1em;', id: "textarea", name: "textarea", rows: 5, cols: 80 }
+    %p
+      %label{ for: "version" } PBCore Version:
+      %select{ name: "version", id: "version" }
+        - Validator::PBCORE_VERSIONS.sort.each do |code, version|
+          %option{ value: code, selected: (code == "1.2") }&= version[:version]
+    %p
+      %input{ type: "reset", value: "Clear Form", class: "button" }
+      %input.s{ type: "submit", value: "Validate PBCore", class: "button" }
 
-%h2 Validate a document
-%form{ :action => "/validator", :method => "post", :enctype => "multipart/form-data" }
-  %p
-    %label{ :for => "file" } Select a file to validate:
-    %input{ :id => "file", :name => "file", :type => "file" }
-  %p
-    %label{ :for => "textarea" } <strong>or</strong> paste a PBCore document into the textbox:
-    %br
-    %textarea{ :id => "textarea", :name => "textarea", :rows => 5, :cols => 80 }
-  %p
-    %label{ :for => "version" } PBCore Version:
-    %select{ :name => "version", :id => "version" }
-      - Validator::PBCORE_VERSIONS.sort.each do |code, version|
-        %option{ :value => code, :selected => (code == "2.1") }&= version[:version]
-  %p
-    %input{ :type => "reset", :value => "Clear Form" }
-    %input.s{ :type => "submit", :value => "Validate PBCore" }
+%div{class: 'box-gray'}
+  #content
+    This PBCore validate update was started on 10/07/2014 by Tessa Fallon for the AMIA/DLF Hack Day. The PBCore validator is written by Mike Castleman and is copyright (c) 2009 by "Roasted Vermicelli, LLC":http://vermicel.li/ and released under the terms of the "GNU General Public License":http://www.gnu.org/licenses/gpl.html, "version 3":COPYING.txt or later.
 
-%hr
-
-:textile
   This version of the PBCore validator is currently maintain by WGBH. It was originally written by mike castleman and is copyright (c) 2009 by "Roasted Vermicelli, LLC":http://vermicel.li/ and released under the terms of the "GNU General Public License":http://www.gnu.org/licenses/gpl.html, "version 3":COPYING.txt or later. An update was then started on 10/07/2014 by Tessa Fallon for the AMIA/DLF Hack Day.
 
   <p>This work employs PBCore, the Public Broadcasting Metadata Dictionary, which is licensed under a <a href="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International license</a>.  (Full legal code available <a href="https://creativecommons.org/licenses/by/4.0/legalcode%5d">here</a>.)</p>
