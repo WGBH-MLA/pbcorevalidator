@@ -80,7 +80,7 @@ class Validator
       "Commentator", "Composer", "Concept Artist", "Conductor",
       "Costume Designer", "Describer", "Director", "Director of Photography",
       "Editor", "Executive Producer", "Filmmaker", "Foley Artist",
-      "Graphic Designer", "Graphic Editor", "Guest", "Host", "Interviewee"
+      "Graphic Designer", "Graphic Editor", "Guest", "Host", "Interviewee",
       "Interviewer", "Lighting Technician", "Make-Up Artist", "Moderator",
       "Music Supervisor", "Musician", "Narrator", "Panelist", "Performer",
       "Performing Group", "Photographer", "Producer", "Production Unit",
@@ -124,7 +124,7 @@ class Validator
       "Original", "Original footage", "Original recording", "Outs and trims",
       "Picture lock", "Positive", "Preservation", "Print", "Proxy file",
       "Reversal", "Rough cut", "Separation master", "Stock footage",
-      "Submaster", " Transcription disc", "Work print", "Work tapes"
+      "Submaster", " Transcription disc", "Work print", "Work tapes",
       "Work track"
     ]
   end
@@ -140,7 +140,7 @@ class Validator
   # io_or_document can either be an IO object or a String containing an XML document.
   def initialize(io_or_document, pbcore_version = "2.1")
     XML.default_line_numbers = true
-    @errors = {best_practices: [], xml: []}
+    @errors = {best_practices: [], xml: [], fail: []}
     @pbcore_version = pbcore_version
     set_rxml_error do
       @xml = io_or_document.respond_to?(:read) ?
@@ -166,7 +166,6 @@ class Validator
     return if @practices_checked || @xml.nil?
     @practices_checked = true
 
-
     check_picklist('assetType', Picklists::ASSET_TYPES , 'http://pbcore.org/pbcore-controlled-vocabularies/.')
     check_picklist('dateType', Picklists::DATE_TYPES , 'http://pbcore.org/pbcore-controlled-vocabularies/datetype-vocabulary/.')
     check_picklist('titleType', Picklists::TITLE_TYPES , 'http://pbcore.org/pbcore-controlled-vocabularies/titletype-vocabulary/.')
@@ -185,10 +184,6 @@ class Validator
 #    check_names('contributor')
 #    check_names('publisher')
     check_only_one_format
-
-
-
-
 
     check_min_one_subelements('pbcoreCollection',['pbcoreDescriptionDocument'],"")
     ['pbcoreDescriptionDocument','pbcorePart'].each do |parentname| check_min_one_subelements(parentname,['pbcoreIdentifier','pbcoreTitle','pbcoreDescription'],"") ; end ;
@@ -211,8 +206,8 @@ class Validator
 
     check_only_one_subelement('instantiationRights',['rightsSummary', 'rightsLink','rightsEmbedded'],"should contain only one subelement.  Please repeat the entire instantiationRights container element for each rightsSummary, rightsLink, or rightsEmbedded.")
 
-	['pbcoreExtension','instantiationExtension'].each do |parentname| check_only_one_subelement(parentname,['extensionWrap','extensionEmbedded'],"should contain only one subelement.  Please repeat the entire '#{parentname}' container element for each 'extensionWrap' or 'extensionEmbedded'") ; end ;
-	['extensionElement','extensionValue'].each do |subname|  check_only_one_subelement('extensionWrap',subname.split(),"must contain one '#{subname}' subelement.") ; end ;
+  	['pbcoreExtension','instantiationExtension'].each do |parentname| check_only_one_subelement(parentname,['extensionWrap','extensionEmbedded'],"should contain only one subelement.  Please repeat the entire '#{parentname}' container element for each 'extensionWrap' or 'extensionEmbedded'") ; end ;
+  	['extensionElement','extensionValue'].each do |subname|  check_only_one_subelement('extensionWrap',subname.split(),"must contain one '#{subname}' subelement.") ; end ;
 
 
     check_valid_characters(['instantiationFileSize', 'instantiationDataRate', 'essenceTrackDataRate', 'essenceTrackFrameRate', 'essenceTrackPlaybackSpeed', 'essenceTrackSamplingRate', 'essenceTrackBitDepth', 'essenceTrackFrameSize', 'essenceTrackAspectRatio'],"g/[0-9]:x.\///", msg = "For best practice, this technical element should only contain numeric values. To express a unit of measure for this element, we recommend using the @unitsOfMeasure attribute.")
@@ -222,15 +217,16 @@ class Validator
     # sort the error messages by line number
     tmperrors=[]
     lastline=@xml.to_s.gsub(13.chr+10.chr,10.chr).tr(13.chr,10.chr).split(10.chr).count # figure out how to get the right number:  @xml.last.line_num isn't it
-    (1..lastline).reverse_each do |lnum|  @errors.select {|msg| msg.to_s.match(" line #{lnum.to_s} ") || msg.to_s.match(" at :#{lnum.to_s}" + 46.chr)}.each do |y| tmperrors<< y if not tmperrors.include?(y); end ; end
+    (1..lastline).reverse_each do |lnum|  @errors[:xml].select {|msg| msg.to_s.match(" line #{lnum.to_s} ") || msg.to_s.match(" at :#{lnum.to_s}" + 46.chr)}.each do |y| tmperrors<< y if not tmperrors.include?(y); end ; end
 	# wacky that each item in tmperrors array is a 1-count array
-    if @errors.to_s.include?(' element is not expected')
-		tmperrors << ["===="]
-		tmperrors << ["Error(s) below about 'expected' elements are about what appears out of the expected order:  missing (required) elements will be cited further; otherwise, consult PBCore documentation for proper sequencing."]
-	end
+    if @errors[:xml].to_s.include?(' element is not expected')
+  		tmperrors << ["===="]
+  		tmperrors << ["Error(s) below about 'expected' elements are about what appears out of the expected order:  missing (required) elements will be cited further; otherwise, consult PBCore documentation for proper sequencing."]
+  	end
 
 	# is it necessary to examine @errors for things *not* in tmperrors?  they would fail assumption of line# test
-    @errors = tmperrors.reverse.reject {|x| x == []}.flatten
+    # ^ what?
+    @errors[:xml] = tmperrors.reverse.reject {|x| x == []}.flatten
 
   end
 
@@ -301,7 +297,7 @@ class Validator
       if node.find(".//pbcore:formatDigital", "pbcore:#{PBCORE_NAMESPACE}").size > 0 &&
           node.find(".//pbcore:formatPhysical", "pbcore:#{PBCORE_NAMESPACE}").size > 0
         @errors[:best_practices] << "It looks like the instantiation on line #{node.line_num} contains both a formatDigital and a formatPhysical element. This is valid, but not recommended in PBCore XML."
-      else
+      end
       if node.find(".//pbcore:instantiationDigital", "pbcore:#{PBCORE_NAMESPACE}").size > 0 &&
           node.find(".//pbcore:instantiationPhysical", "pbcore:#{PBCORE_NAMESPACE}").size > 0
         @errors[:best_practices] << "It looks like the instantiation on line #{node.line_num} contains both a instantiationDigital and a instantiationPhysical element. This is valid, but not recommended in PBCore XML."
@@ -310,14 +306,14 @@ class Validator
   end
 
   def check_element_has_attribute(elementname,attributename,msg="")
-       each_elt(elementname.to_s) do |node|
-          isMissing=true
-          node.attributes.each {|attribute| isMissing=false if attribute.name == attributename }
-          # node.attributes.get_attribute(attributename)
-          if isMissing
-              @errors << "Element '#{elementname}' at line #{node.line_num} must contain the attribute '#{attributename}' " + msg.to_s
-          end
-       end
+    each_elt(elementname.to_s) do |node|
+      isMissing=true
+      node.attributes.each {|attribute| isMissing=false if attribute.name == attributename }
+      # node.attributes.get_attribute(attributename)
+      if isMissing
+          @errors[:xml] << "Element '#{elementname}' at line #{node.line_num} must contain the attribute '#{attributename}' " + msg.to_s
+      end
+    end
   end
 
   def check_only_one_subelement(parentname,subnames,msg = "")
@@ -325,55 +321,55 @@ class Validator
     each_elt(parentname.to_s) do |node|
         subsum=0
     	subnames.each do |subname|
-			subsum = subsum + node.find("./pbcore:#{subname}", "pbcore:#{PBCORE_NAMESPACE}").size
-		end
-		if subsum != 1
-			@errors << "Element '#{parentname}' near line #{node.line_num} " + msg.to_s
-		end
-	end
+  			subsum = subsum + node.find("./pbcore:#{subname}", "pbcore:#{PBCORE_NAMESPACE}").size
+  		end
+  		if subsum != 1
+  			@errors[:xml] << "Element '#{parentname}' near line #{node.line_num} " + msg.to_s
+  		end
+  	end
   end
 
   def check_max_one_subelements(parentname,subnames,msg = "")
     each_elt(parentname.to_s) do |node|
     	subnames.each do |subname|
-			subsum = node.find("./pbcore:#{subname}", "pbcore:#{PBCORE_NAMESPACE}").size
-			if subsum > 1
-				@errors << "Element '#{subname}' near line #{node.line_num} isn’t repeatable. For valid PBCore, please find another way to incorporate that information.  " + msg.to_s
-			end
-		end
-	end
+  			subsum = node.find("./pbcore:#{subname}", "pbcore:#{PBCORE_NAMESPACE}").size
+  			if subsum > 1
+  				@errors[:xml] << "Element '#{subname}' near line #{node.line_num} isn’t repeatable. For valid PBCore, please find another way to incorporate that information.  " + msg.to_s
+  			end
+  		end
+  	end
   end
 
   def check_min_one_subelements(parentname,subnames,msg = "")
-	each_elt(parentname.to_s) do |node|
-		subnames.each do |subname|
-			subsum = node.find("./pbcore:#{subname}", "pbcore:#{PBCORE_NAMESPACE}").size
-			if subsum < 1
-				@errors << "Element '#{parentname}' near line #{node.line_num} is missing required subelement '#{subname}.'  For valid PBCore, please add a value for this element." + msg.to_s
-			end
-		end
-	end
+  	each_elt(parentname.to_s) do |node|
+  		subnames.each do |subname|
+  			subsum = node.find("./pbcore:#{subname}", "pbcore:#{PBCORE_NAMESPACE}").size
+  			if subsum < 1
+  				@errors[:xml] << "Element '#{parentname}' near line #{node.line_num} is missing required subelement '#{subname}.'  For valid PBCore, please add a value for this element." + msg.to_s
+  			end
+  		end
+  	end
   end
 
   def check_valid_characters(elements_array,validstring = "", msg = "")
     elements_array.each do |elt|
-		each_elt(elt.to_s) do |node|
-			if node.content.tr(validstring,"") != ""
-				@errors << "Element '#{node.name}' at line #{node.line_num} contains unexpected #{node.content.tr(validstring,"").length} characters.  " + msg.to_s
-			end
-		end
-	end
+  		each_elt(elt.to_s) do |node|
+  			if node.content.tr(validstring,"") != ""
+  				@errors[:xml] << "Element '#{node.name}' at line #{node.line_num} contains unexpected #{node.content.tr(validstring,"").length} characters.  " + msg.to_s
+  			end
+  		end
+  	end
   end
 
   def check_valid_length_codes(elements_array, delimiter = ';' ,msg = "")
     elements_array.each do |elt|
-		each_elt(elt.to_s) do |node|
-			xcount=node.content.split(delimiter).select{|x| x.length < 2 || x.length > 3}.length
-			if xcount != 0
-				@errors << "Element '#{node.name}' at line #{node.line_num} contains #{xcount} unexpected value#{'s' if xcount > 1}.  " + msg.to_s
-			end
-		end
-	end
+  		each_elt(elt.to_s) do |node|
+  			xcount=node.content.split(delimiter).select{|x| x.length < 2 || x.length > 3}.length
+  			if xcount != 0
+  				@errors[:xml] << "Element '#{node.name}' at line #{node.line_num} contains #{xcount} unexpected value#{'s' if xcount > 1}.  " + msg.to_s
+  			end
+  		end
+  	end
   end
 
 
