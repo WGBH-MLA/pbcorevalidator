@@ -163,9 +163,6 @@ class Validator
   #
   # this is subjective, of course.
   def checkbestpractices
-    return if @practices_checked || @xml.nil?
-    @practices_checked = true
-
     check_picklist('assetType', Picklists::ASSET_TYPES , 'http://pbcore.org/pbcore-controlled-vocabularies/.')
     check_picklist('dateType', Picklists::DATE_TYPES , 'http://pbcore.org/pbcore-controlled-vocabularies/datetype-vocabulary/.')
     check_picklist('titleType', Picklists::TITLE_TYPES , 'http://pbcore.org/pbcore-controlled-vocabularies/titletype-vocabulary/.')
