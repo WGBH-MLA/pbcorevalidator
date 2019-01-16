@@ -15,6 +15,13 @@
       %select{ name: "version", id: "version" }
         - Validator::PBCORE_VERSIONS.sort.each do |code, version|
           %option{ value: code, selected: (code == "2.1") }&= version[:version]
+
+    %p
+      %b Additional Validations:
+      %label{ :for => "vocabs" } Controlled Vocabularies
+      %input{ :type => "checkbox", :name => "vocabs" }
+      %label{ :for => "best_practices" } Best Practices
+      %input{ :type => "checkbox", :name => "best_practices" }
     %p
       %input{ type: "reset", value: "Clear Form", class: "button" }
       %input.s{ type: "submit", value: "Validate PBCore", class: "button" }

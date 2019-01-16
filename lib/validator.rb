@@ -113,7 +113,7 @@ class Validator
       ]
 
     MEDIA_TYPES = [
-		"Moving Image" "MovingImage", "Audio"
+		"Moving Image", "MovingImage", "Audio"
 	]
 
     GENERATIONS = [
@@ -138,9 +138,10 @@ class Validator
   # creates a new PBCore validator object, parsing the provided XML.
   #
   # io_or_document can either be an IO object or a String containing an XML document.
-  def initialize(io_or_document, pbcore_version = "2.1")
+  def initialize(io_or_document, pbcore_version = "2.1", options)
     XML.default_line_numbers = true
-    @errors = {best_practices: [], xml: [], fail: []}
+    @options = options
+    @errors = {best_practices: [], xml: [], fail: [], vocabs: []}
     @pbcore_version = pbcore_version
     set_rxml_error do
       @xml = io_or_document.respond_to?(:read) ?
@@ -159,10 +160,7 @@ class Validator
     end
   end
 
-  # check for things which are not errors, exactly, but which are not really good ideas either.
-  #
-  # this is subjective, of course.
-  def checkbestpractices
+  def checkvocabs
     check_picklist('assetType', Picklists::ASSET_TYPES , 'http://pbcore.org/pbcore-controlled-vocabularies/.')
     check_picklist('dateType', Picklists::DATE_TYPES , 'http://pbcore.org/pbcore-controlled-vocabularies/datetype-vocabulary/.')
     check_picklist('titleType', Picklists::TITLE_TYPES , 'http://pbcore.org/pbcore-controlled-vocabularies/titletype-vocabulary/.')
@@ -177,6 +175,12 @@ class Validator
     check_picklist('formatMediaType', Picklists::MEDIA_TYPES , 'http://pbcore.org/pbcore-controlled-vocabularies/instantiationmediatype-vocabulary/.')
     check_picklist('instantiationMediaType', Picklists::MEDIA_TYPES, 'http://pbcore.org/pbcore-controlled-vocabularies/instantiationmediatype-vocabulary/.')
     check_picklist('coverageType', Picklists::COVERAGE_TYPES)
+  end
+
+  # check for things which are not errors, exactly, but which are not really good ideas either.
+  #
+  # this is subjective, of course.
+  def checkbestpractices
 #    check_names('creator')
 #    check_names('contributor')
 #    check_names('publisher')
@@ -231,6 +235,7 @@ class Validator
   def valid?
     checkschema
     checkbestpractices
+    checkvocabs
     @errors[:best_practices].empty? && @errors[:xml].empty?
   end
 
@@ -242,7 +247,8 @@ class Validator
   # returns a list of perceived errors with the document.
   def errors
     checkschema
-    checkbestpractices
+    checkvocabs if @options[:vocabs]
+    checkbestpractices if @options[:best_practices]
     @errors.clone
   end
 
@@ -273,9 +279,9 @@ class Validator
   def check_picklist(elt, picklist, msg = "")
     each_elt(elt) do |node|
       if node.content.strip.empty?
-        @errors[:best_practices] << "#{elt} on #{node.line_num} is empty. Perhaps consider leaving that element out instead."
+        @errors[:vocabs] << "#{elt} on #{node.line_num} is empty. Perhaps consider leaving that element out instead."
       elsif !picklist.any?{|i| i.downcase == node.content.downcase}
-        @errors[:best_practices] << "“#{node.content}” on line #{node.line_num} is not in the PBCore suggested controlled vocabulary for #{elt}. While that is valid, you may want to see if there is an appropriate term in the vocabulary here: " + msg.to_s
+        @errors[:vocabs] << "“#{node.content}” on line #{node.line_num} is not in the PBCore suggested controlled vocabulary for #{elt}. While that is valid, you may want to see if there is an appropriate term in the vocabulary here: " + msg.to_s
       end
     end
     check_lists(elt)

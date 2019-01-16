@@ -24,6 +24,14 @@
         - @errors[:best_practices].each do |error|
           %li&= error
 
+  - if @errors[:vocabs] && @errors[:vocabs].first
+    %div{class: 'box-gray'}
+      %h2
+        Controlled Vocabularies
+      %ul
+        - @errors[:vocabs].each do |error|
+          %li&= error
+
   - if @errors[:fail] && @errors[:fail].first
     %div{class: 'box-gray'}
 

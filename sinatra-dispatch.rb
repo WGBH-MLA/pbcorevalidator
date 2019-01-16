@@ -46,7 +46,7 @@ class App < Sinatra::Application
     end
 
     if params[:file] && params[:file][:tempfile] && params[:file][:tempfile].size > 0
-      @validator = Validator.new(params[:file][:tempfile], version)
+      @validator = Validator.new(params[:file][:tempfile], version, {best_practices: params[:best_practices], vocabs: params[:vocabs]})
     elsif !params[:textarea].strip.empty?
       @validator = Validator.new(params[:textarea], version)
     else
