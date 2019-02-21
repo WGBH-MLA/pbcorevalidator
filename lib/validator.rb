@@ -234,7 +234,7 @@ class Validator
   # returns true iff the document is perfectly okay
   def valid?
     checkschema
-    checkbestpractices
+    checkbestpractices if @pbcore_version != "2.0"
     checkvocabs
     @errors[:best_practices].empty? && @errors[:xml].empty?
   end
@@ -248,7 +248,7 @@ class Validator
   def errors
     checkschema
     checkvocabs if @options[:vocabs]
-    checkbestpractices if @options[:best_practices]
+    checkbestpractices if @options[:best_practices] && @pbcore_version != "2.0"
     @errors.clone
   end
 

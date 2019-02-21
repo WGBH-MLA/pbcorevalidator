@@ -41,18 +41,21 @@ class App < Sinatra::Application
 
     unless (version && Validator::PBCORE_VERSIONS[version])
       @errors = {}
-      @errors[:fail] = []
-      @errors[:fail] << "You must select a PBCore version to validate against."
+      @errors[:fail] = ["You must select a PBCore version to validate against."]
     end
 
     if params[:file] && params[:file][:tempfile] && params[:file][:tempfile].size > 0
-      @validator = Validator.new(params[:file][:tempfile], version, {best_practices: params[:best_practices], vocabs: params[:vocabs]})
+      input = params[:file][:tempfile]
     elsif !params[:textarea].strip.empty?
-      @validator = Validator.new(params[:textarea], version)
+      input = params[:textarea]
     else
       @errors = {}
       @errors[:fail] = []
       @errors[:fail] << "You must provide a PBCore document either by file upload or by pasting into the textarea."
+    end
+
+    if input
+      @validator = Validator.new(input, version, {best_practices: params[:best_practices], vocabs: params[:vocabs]})
     end
 
     @errors = @validator.errors unless @errors
