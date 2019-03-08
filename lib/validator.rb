@@ -148,6 +148,7 @@ class Validator
         XML::Document.io(io_or_document) :
         XML::Document.string(io_or_document)
     end
+
   end
 
   # checks the PBCore document against the XSD schema
@@ -233,10 +234,7 @@ class Validator
 
   # returns true iff the document is perfectly okay
   def valid?
-    checkschema
-    checkbestpractices if @pbcore_version != "2.0"
-    checkvocabs
-    @errors[:best_practices].empty? && @errors[:xml].empty?
+    !@errors || (@errors[:xml].empty? && @errors[:best_practices].empty? && @errors[:vocabs].empty? && @errors[:fail].empty?)
   end
 
   # returns true iff the document is at least some valid form of XML
@@ -246,6 +244,8 @@ class Validator
 
   # returns a list of perceived errors with the document.
   def errors
+    # fatal parse error gets rescued but there ain't no elements!! save our bacon here
+    return @errors if @errors[:xml] && @errors[:xml].count > 0
     checkschema
     checkvocabs if @options[:vocabs]
     checkbestpractices if @options[:best_practices] && @pbcore_version != "2.0"

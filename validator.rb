@@ -28,10 +28,12 @@ end
 
 val.checkschema
 
+errors = val.errors
+
 if val.valid?
   puts "valid record!"
 end
 
-val.errors.each do |e|
+errors.each do |e|
   $stderr.puts e
 end
