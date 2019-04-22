@@ -219,16 +219,16 @@ class Validator
     # sort the error messages by line number
     tmperrors=[]
     lastline=@xml.to_s.gsub(13.chr+10.chr,10.chr).tr(13.chr,10.chr).split(10.chr).count # figure out how to get the right number:  @xml.last.line_num isn't it
-    (1..lastline).reverse_each do |lnum|  @errors[:xml].select {|msg| msg.to_s.match(" line #{lnum.to_s} ") || msg.to_s.match(" at :#{lnum.to_s}" + 46.chr)}.each do |y| tmperrors<< y if not tmperrors.include?(y); end ; end
+    (1..lastline).reverse_each do |lnum|  @errors[:best_practices].select {|msg| msg.to_s.match(" line #{lnum.to_s} ") || msg.to_s.match(" at :#{lnum.to_s}" + 46.chr)}.each do |y| tmperrors<< y if not tmperrors.include?(y); end ; end
 	# wacky that each item in tmperrors array is a 1-count array
-    if @errors[:xml].to_s.include?(' element is not expected')
+    if @errors[:best_practices].to_s.include?(' element is not expected')
   		tmperrors << ["===="]
   		tmperrors << ["Error(s) below about 'expected' elements are about what appears out of the expected order:  missing (required) elements will be cited further; otherwise, consult PBCore documentation for proper sequencing."]
   	end
 
 	# is it necessary to examine @errors for things *not* in tmperrors?  they would fail assumption of line# test
     # ^ what?
-    @errors[:xml] = tmperrors.reverse.reject {|x| x == []}.flatten
+    @errors[:best_practices] = tmperrors.reverse.reject {|x| x == []}.flatten
 
   end
 
@@ -314,7 +314,7 @@ class Validator
       node.attributes.each {|attribute| isMissing=false if attribute.name == attributename }
       # node.attributes.get_attribute(attributename)
       if isMissing
-          @errors[:xml] << "Element '#{elementname}' at line #{node.line_num} must contain the attribute '#{attributename}' " + msg.to_s
+          @errors[:best_practices] << "Element '#{elementname}' at line #{node.line_num} must contain the attribute '#{attributename}' " + msg.to_s
       end
     end
   end
@@ -327,7 +327,7 @@ class Validator
   			subsum = subsum + node.find("./pbcore:#{subname}", "pbcore:#{PBCORE_NAMESPACE}").size
   		end
   		if subsum != 1
-  			@errors[:xml] << "Element '#{parentname}' near line #{node.line_num} " + msg.to_s
+  			@errors[:best_practices] << "Element '#{parentname}' near line #{node.line_num} " + msg.to_s
   		end
   	end
   end
@@ -337,7 +337,7 @@ class Validator
     	subnames.each do |subname|
   			subsum = node.find("./pbcore:#{subname}", "pbcore:#{PBCORE_NAMESPACE}").size
   			if subsum > 1
-  				@errors[:xml] << "Element '#{subname}' near line #{node.line_num} isn’t repeatable. For valid PBCore, please find another way to incorporate that information.  " + msg.to_s
+  				@errors[:best_practices] << "Element '#{subname}' near line #{node.line_num} isn’t repeatable. For valid PBCore, please find another way to incorporate that information.  " + msg.to_s
   			end
   		end
   	end
@@ -348,7 +348,7 @@ class Validator
   		subnames.each do |subname|
   			subsum = node.find("./pbcore:#{subname}", "pbcore:#{PBCORE_NAMESPACE}").size
   			if subsum < 1
-  				@errors[:xml] << "Element '#{parentname}' near line #{node.line_num} is missing required subelement '#{subname}.'  For valid PBCore, please add a value for this element." + msg.to_s
+  				@errors[:best_practices] << "Element '#{parentname}' near line #{node.line_num} is missing required subelement '#{subname}.'  For valid PBCore, please add a value for this element." + msg.to_s
   			end
   		end
   	end
@@ -358,7 +358,7 @@ class Validator
     elements_array.each do |elt|
   		each_elt(elt.to_s) do |node|
   			if node.content.tr(validstring,"") != ""
-  				@errors[:xml] << "Element '#{node.name}' at line #{node.line_num} contains unexpected #{node.content.tr(validstring,"").length} characters.  " + msg.to_s
+  				@errors[:best_practices] << "Element '#{node.name}' at line #{node.line_num} contains unexpected #{node.content.tr(validstring,"").length} characters.  " + msg.to_s
   			end
   		end
   	end
@@ -369,7 +369,7 @@ class Validator
   		each_elt(elt.to_s) do |node|
   			xcount=node.content.split(delimiter).select{|x| x.length < 2 || x.length > 3}.length
   			if xcount != 0
-  				@errors[:xml] << "Element '#{node.name}' at line #{node.line_num} contains #{xcount} unexpected value#{'s' if xcount > 1}.  " + msg.to_s
+  				@errors[:best_practices] << "Element '#{node.name}' at line #{node.line_num} contains #{xcount} unexpected value#{'s' if xcount > 1}.  " + msg.to_s
   			end
   		end
   	end
