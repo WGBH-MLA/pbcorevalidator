@@ -163,10 +163,10 @@ class Validator
 
   def checkvocabs
     check_picklist('assetType', Picklists::ASSET_TYPES , 'http://pbcore.org/pbcore-controlled-vocabularies/.')
-    check_picklist('dateType', Picklists::DATE_TYPES , 'http://pbcore.org/pbcore-controlled-vocabularies/datetype-vocabulary/.')
-    check_picklist('titleType', Picklists::TITLE_TYPES , 'http://pbcore.org/pbcore-controlled-vocabularies/titletype-vocabulary/.')
+    check_picklist('dateType', Picklists::DATE_TYPES , 'http://pbcore.org/pbcore-controlled-vocabularies/datetype-vocabulary/.', true)
+    check_picklist('titleType', Picklists::TITLE_TYPES , 'http://pbcore.org/pbcore-controlled-vocabularies/titletype-vocabulary/.', true)
     check_lists('subject')
-    check_picklist('descriptionType', Picklists::DESCRIPTION_TYPES , 'http://pbcore.org/pbcore-controlled-vocabularies/descriptiontype-vocabulary/.')
+    check_picklist('descriptionType', Picklists::DESCRIPTION_TYPES , 'http://pbcore.org/pbcore-controlled-vocabularies/descriptiontype-vocabulary/.', true)
     check_picklist('relationType', Picklists::RELATION_TYPES , 'http://pbcore.org/pbcore-controlled-vocabularies/pbcorerelationtype-vocabulary/ and http://pbcore.org/pbcore-controlled-vocabularies/instatiationrelationtype-vocabulary/')
     check_picklist('creatorRole', Picklists::ROLES , 'http://pbcore.org/pbcore-controlled-vocabularies/creatorrole-and-contributorrole-vocabulary/.')
     check_picklist('contributorRole', Picklists::ROLES , 'http://pbcore.org/pbcore-controlled-vocabularies/creatorrole-and-contributorrole-vocabulary/.')
@@ -276,12 +276,15 @@ class Validator
   end
 
   private
-  def check_picklist(elt, picklist, msg = "")
-    each_elt(elt) do |node|
-      if node.content.strip.empty?
+  def check_picklist(elt, picklist, msg = "", attribute=false)
+    search_method = attribute ? :each_attr : :each_elt
+
+    send(search_method, elt) do |node|
+      value_to_test = attribute ? node.attributes.get_attribute(elt).value : node.content
+      if value_to_test.strip.empty?
         @errors[:vocabs] << "#{elt} on #{node.line_num} is empty. Perhaps consider leaving that element out instead."
-      elsif !picklist.any?{|i| i.downcase == node.content.downcase}
-        @errors[:vocabs] << "“#{node.content}” on line #{node.line_num} is not in the PBCore suggested controlled vocabulary for #{elt}. While that is valid, you may want to see if there is an appropriate term in the vocabulary here: " + msg.to_s
+      elsif picklist.none?{|i| i.downcase == value_to_test.downcase}
+        @errors[:vocabs] << "“#{value_to_test}” on line #{node.line_num} is not in the PBCore suggested controlled vocabulary for #{elt}. While that is valid, you may want to see if there is an appropriate term in the vocabulary here: " + msg.to_s
       end
     end
     check_lists(elt)
@@ -378,6 +381,12 @@ class Validator
 
   def each_elt(elt)
     @xml.find("//pbcore:#{elt}", "pbcore:#{PBCORE_NAMESPACE}").each do |node|
+      yield node
+    end
+  end
+
+  def each_attr(attr)
+    @xml.find("//*[@#{attr}]", "pbcore:#{PBCORE_NAMESPACE}").each do |node|
       yield node
     end
   end
