@@ -141,7 +141,9 @@ class Validator
   def initialize(io_or_document, pbcore_version = "2.1", options)
     XML.default_line_numbers = true
     @options = options
-    @errors = {best_practices: [], xml: [], fail: [], vocabs: []}
+
+    # best_practices is hash to record line numbers - it will be converted to array once we have the full best_practices error list
+    @errors = {best_practices: {}, xml: [], fail: [], vocabs: []}
     @pbcore_version = pbcore_version
     set_rxml_error do
       @xml = io_or_document.respond_to?(:read) ?
@@ -217,25 +219,18 @@ class Validator
     check_valid_characters(['instantiationTimeStart', 'instantiationDuration', 'essenceTrackTimeStart', 'essenceTrackDuration'],"g/[0-9]:;\.//", msg = "Best practice is to use a timestamp format for this element, such as HH:MM:SS:FF or HH:MM:SS.mmm or S.mmm.")
     
     check_date(['pbcoreAssetDate', 'instantiationDate'])
-    # require('pry');binding.pry
+
     check_valid_length_codes(['instantiationLanguage', 'essenceTrackLanguage'], ';', "Best practice is to use one of the ISO 639.2 or 639.3 standard language codes, which can be found at http://www.loc.gov/standards/iso639-2/ and http://www-01.sil.org/iso639-3/codes.asp. You can describe more than one language in the element by separating two three-letter codes with a semicolon, i.e. eng;fre.")
 
-    # sort the error messages by line number
- #    tmperrors=[]
- #    lastline=@xml.to_s.gsub(13.chr+10.chr,10.chr).tr(13.chr,10.chr).split(10.chr).count # figure out how to get the right number:  @xml.last.line_num isn't it
- #    (1..lastline).reverse_each do |lnum|  @errors[:best_practices].select {|msg| msg.to_s.match(" line #{lnum.to_s} ") || msg.to_s.match(" at :#{lnum.to_s}" + 46.chr)}.each do |y| tmperrors<< y if not tmperrors.include?(y); end ; end
-	# # wacky that each item in tmperrors array is a 1-count array
- #    if @errors[:best_practices].to_s.include?(' element is not expected')
- #  		tmperrors << ["===="]
- #  		tmperrors << ["Error(s) below about 'expected' elements are about what appears out of the expected order:  missing (required) elements will be cited further; otherwise, consult PBCore documentation for proper sequencing."]
- #  	end
+    # ordered_best_prac = []
+    # @errors[:best_practices].keys.sort.each do |line_num|
+    #   ordered_best_prac << @errors[:best_practices][line_num]
+    # end
+    # @errors[:best_practices] = ordered_best_prac.flatten
 
-	# # is it necessary to examine @errors for things *not* in tmperrors?  they would fail assumption of line# test
- #    # ^ what?
- #    @errors[:best_practices] = tmperrors.reverse.reject {|x| x == []}.flatten
 
-    # ok!
-    @errors[:best_practices].uniq!
+    @errors[:best_practices] = @errors[:best_practices].keys.sort.map {|line_num| @errors[:best_practices][line_num] }.flatten
+
   end
 
   # returns true iff the document is perfectly okay
@@ -282,6 +277,12 @@ class Validator
   end
 
   private
+
+  def add_to_line_num_hash(node, error)
+    @errors[:best_practices][node.line_num] ||= []
+    @errors[:best_practices][node.line_num] << error
+  end
+
   def check_picklist(elt, picklist, msg = "", attribute=false)
     search_method = attribute ? :each_attr : :each_elt
 
@@ -299,7 +300,7 @@ class Validator
   def check_lists(elt)
     each_elt(elt) do |node|
       if node.content =~ /[,|;]/
-        @errors[:best_practices] << "In #{elt} on line #{node.line_num}, you have entered “#{node.content}”, which looks like it may be a list. It is preferred instead to repeat the containing element."
+        add_to_line_num_hash(node, "In #{elt} on line #{node.line_num}, you have entered “#{node.content}”, which looks like it may be a list. It is preferred instead to repeat the containing element.")
       end
     end
   end
@@ -308,11 +309,11 @@ class Validator
     each_elt("pbcoreInstantiation") do |node|
       if node.find(".//pbcore:formatDigital", "pbcore:#{PBCORE_NAMESPACE}").size > 0 &&
           node.find(".//pbcore:formatPhysical", "pbcore:#{PBCORE_NAMESPACE}").size > 0
-        @errors[:best_practices] << "It looks like the instantiation on line #{node.line_num} contains both a formatDigital and a formatPhysical element. This is valid, but not recommended in PBCore XML."
+        add_to_line_num_hash(node, "It looks like the instantiation on line #{node.line_num} contains both a formatDigital and a formatPhysical element. This is valid, but not recommended in PBCore XML.")
       end
       if node.find(".//pbcore:instantiationDigital", "pbcore:#{PBCORE_NAMESPACE}").size > 0 &&
           node.find(".//pbcore:instantiationPhysical", "pbcore:#{PBCORE_NAMESPACE}").size > 0
-        @errors[:best_practices] << "It looks like the instantiation on line #{node.line_num} contains both a instantiationDigital and a instantiationPhysical element. This is valid, but not recommended in PBCore XML."
+        add_to_line_num_hash(node, "It looks like the instantiation on line #{node.line_num} contains both a instantiationDigital and a instantiationPhysical element. This is valid, but not recommended in PBCore XML.")
       end
     end
   end
@@ -323,7 +324,7 @@ class Validator
       node.attributes.each {|attribute| isMissing=false if attribute.name == attributename }
       # node.attributes.get_attribute(attributename)
       if isMissing
-          @errors[:best_practices] << "Element '#{elementname}' at line #{node.line_num} must contain the attribute '#{attributename}' " + msg.to_s
+        add_to_line_num_hash(node, "Element '#{elementname}' at line #{node.line_num} must contain the attribute '#{attributename}' #{msg.to_s}")
       end
     end
   end
@@ -336,7 +337,7 @@ class Validator
   			subsum = subsum + node.find("./pbcore:#{subname}", "pbcore:#{PBCORE_NAMESPACE}").size
   		end
   		if subsum != 1
-  			@errors[:best_practices] << "Element '#{parentname}' near line #{node.line_num} " + msg.to_s
+  			add_to_line_num_hash(node, "Element '#{parentname}' near line #{node.line_num} #{msg.to_s}")
   		end
   	end
   end
@@ -346,7 +347,7 @@ class Validator
     	subnames.each do |subname|
   			subsum = node.find("./pbcore:#{subname}", "pbcore:#{PBCORE_NAMESPACE}").size
   			if subsum > 1
-  				@errors[:best_practices] << "Element '#{subname}' near line #{node.line_num} isn’t repeatable. For valid PBCore, please find another way to incorporate that information.  " + msg.to_s
+  				add_to_line_num_hash(node, "Element '#{subname}' near line #{node.line_num} isn’t repeatable. For valid PBCore, please find another way to incorporate that information.  #{msg.to_s}")
   			end
   		end
   	end
@@ -357,7 +358,7 @@ class Validator
   		subnames.each do |subname|
   			subsum = node.find("./pbcore:#{subname}", "pbcore:#{PBCORE_NAMESPACE}").size
   			if subsum < 1
-  				@errors[:best_practices] << "Element '#{parentname}' near line #{node.line_num} is missing required subelement '#{subname}.'  For valid PBCore, please add a value for this element." + msg.to_s
+  				add_to_line_num_hash(node, "Element '#{parentname}' near line #{node.line_num} is missing required subelement '#{subname}.'  For valid PBCore, please add a value for this element. #{msg.to_s}")
   			end
   		end
   	end
@@ -367,7 +368,7 @@ class Validator
     elements_array.each do |elt|
   		each_elt(elt.to_s) do |node|
   			if node.content.tr(validstring,"") != ""
-  				@errors[:best_practices] << "Element '#{node.name}' at line #{node.line_num} contains unexpected #{node.content.tr(validstring,"").length} characters.  " + msg.to_s
+  				add_to_line_num_hash(node, "Element '#{node.name}' at line #{node.line_num} contains unexpected #{node.content.tr(validstring,"").length} characters. #{msg.to_s}")
   			end
   		end
   	end
@@ -377,7 +378,7 @@ class Validator
     elements_array.each do |elt|
       each_elt(elt.to_s) do |node|
         unless node.content.match(/\A\d{4}\-\d{1,2}\-\d{1,2}\z|\A\d{4}\-\d{1,2}\z|\A\d{4}\z/)
-          @errors[:best_practices] << "Element '#{node.name}' at line #{node.line_num}: The recommended formats for date fields are: YYYY-MM-DD, YYYY-MM, and YYYY."
+          add_to_line_num_hash(node, "Element '#{node.name}' at line #{node.line_num}: The recommended formats for date fields are: YYYY-MM-DD, YYYY-MM, and YYYY.")
         end
       end
     end
@@ -388,7 +389,7 @@ class Validator
   		each_elt(elt.to_s) do |node|
   			xcount=node.content.split(delimiter).select{|x| x.length < 2 || x.length > 3}.length
   			if xcount != 0
-  				@errors[:best_practices] << "Element '#{node.name}' at line #{node.line_num} contains #{xcount} unexpected value#{'s' if xcount > 1}.  " + msg.to_s
+  				add_to_line_num_hash(node, "Element '#{node.name}' at line #{node.line_num} contains #{xcount} unexpected value#{'s' if xcount > 1}. #{msg.to_s}")
   			end
   		end
   	end
