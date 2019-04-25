@@ -213,23 +213,29 @@ class Validator
 
 
     check_valid_characters(['instantiationFileSize', 'instantiationDataRate', 'essenceTrackDataRate', 'essenceTrackFrameRate', 'essenceTrackPlaybackSpeed', 'essenceTrackSamplingRate', 'essenceTrackBitDepth', 'essenceTrackFrameSize', 'essenceTrackAspectRatio'],"g/[0-9]:x.\///", msg = "For best practice, this technical element should only contain numeric values. To express a unit of measure for this element, we recommend using the @unitsOfMeasure attribute.")
+    
     check_valid_characters(['instantiationTimeStart', 'instantiationDuration', 'essenceTrackTimeStart', 'essenceTrackDuration'],"g/[0-9]:;\.//", msg = "Best practice is to use a timestamp format for this element, such as HH:MM:SS:FF or HH:MM:SS.mmm or S.mmm.")
+    
+    check_date(['pbcoreAssetDate', 'instantiationDate'])
+    # require('pry');binding.pry
     check_valid_length_codes(['instantiationLanguage', 'essenceTrackLanguage'], ';', "Best practice is to use one of the ISO 639.2 or 639.3 standard language codes, which can be found at http://www.loc.gov/standards/iso639-2/ and http://www-01.sil.org/iso639-3/codes.asp. You can describe more than one language in the element by separating two three-letter codes with a semicolon, i.e. eng;fre.")
 
     # sort the error messages by line number
-    tmperrors=[]
-    lastline=@xml.to_s.gsub(13.chr+10.chr,10.chr).tr(13.chr,10.chr).split(10.chr).count # figure out how to get the right number:  @xml.last.line_num isn't it
-    (1..lastline).reverse_each do |lnum|  @errors[:best_practices].select {|msg| msg.to_s.match(" line #{lnum.to_s} ") || msg.to_s.match(" at :#{lnum.to_s}" + 46.chr)}.each do |y| tmperrors<< y if not tmperrors.include?(y); end ; end
-	# wacky that each item in tmperrors array is a 1-count array
-    if @errors[:best_practices].to_s.include?(' element is not expected')
-  		tmperrors << ["===="]
-  		tmperrors << ["Error(s) below about 'expected' elements are about what appears out of the expected order:  missing (required) elements will be cited further; otherwise, consult PBCore documentation for proper sequencing."]
-  	end
+ #    tmperrors=[]
+ #    lastline=@xml.to_s.gsub(13.chr+10.chr,10.chr).tr(13.chr,10.chr).split(10.chr).count # figure out how to get the right number:  @xml.last.line_num isn't it
+ #    (1..lastline).reverse_each do |lnum|  @errors[:best_practices].select {|msg| msg.to_s.match(" line #{lnum.to_s} ") || msg.to_s.match(" at :#{lnum.to_s}" + 46.chr)}.each do |y| tmperrors<< y if not tmperrors.include?(y); end ; end
+	# # wacky that each item in tmperrors array is a 1-count array
+ #    if @errors[:best_practices].to_s.include?(' element is not expected')
+ #  		tmperrors << ["===="]
+ #  		tmperrors << ["Error(s) below about 'expected' elements are about what appears out of the expected order:  missing (required) elements will be cited further; otherwise, consult PBCore documentation for proper sequencing."]
+ #  	end
 
-	# is it necessary to examine @errors for things *not* in tmperrors?  they would fail assumption of line# test
-    # ^ what?
-    @errors[:best_practices] = tmperrors.reverse.reject {|x| x == []}.flatten
+	# # is it necessary to examine @errors for things *not* in tmperrors?  they would fail assumption of line# test
+ #    # ^ what?
+ #    @errors[:best_practices] = tmperrors.reverse.reject {|x| x == []}.flatten
 
+    # ok!
+    @errors[:best_practices].uniq!
   end
 
   # returns true iff the document is perfectly okay
@@ -365,6 +371,16 @@ class Validator
   			end
   		end
   	end
+  end
+
+  def check_date(elements_array)
+    elements_array.each do |elt|
+      each_elt(elt.to_s) do |node|
+        unless node.content.match(/\A\d{4}\-\d{1,2}\-\d{1,2}\z|\A\d{4}\-\d{1,2}\z|\A\d{4}\z/)
+          @errors[:best_practices] << "Element '#{node.name}' at line #{node.line_num}: The recommended formats for date fields are: YYYY-MM-DD, YYYY-MM, and YYYY."
+        end
+      end
+    end
   end
 
   def check_valid_length_codes(elements_array, delimiter = ';' ,msg = "")
