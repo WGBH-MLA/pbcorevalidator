@@ -222,15 +222,8 @@ class Validator
 
     check_valid_length_codes(['instantiationLanguage', 'essenceTrackLanguage'], ';', "Best practice is to use one of the ISO 639.2 or 639.3 standard language codes, which can be found at http://www.loc.gov/standards/iso639-2/ and http://www-01.sil.org/iso639-3/codes.asp. You can describe more than one language in the element by separating two three-letter codes with a semicolon, i.e. eng;fre.")
 
-    # ordered_best_prac = []
-    # @errors[:best_practices].keys.sort.each do |line_num|
-    #   ordered_best_prac << @errors[:best_practices][line_num]
-    # end
-    # @errors[:best_practices] = ordered_best_prac.flatten
-
-
+    # put em in order
     @errors[:best_practices] = @errors[:best_practices].keys.sort.map {|line_num| @errors[:best_practices][line_num] }.flatten
-
   end
 
   # returns true iff the document is perfectly okay
