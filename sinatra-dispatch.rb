@@ -17,56 +17,48 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-$: << File.expand_path(File.dirname(__FILE__))
 
 require 'sinatra'
-require 'bundler'
-require 'cgi'
-Bundler.require
-require 'lib/validator'
+require_relative './lib/validator'
 require 'haml'
 
-class App < Sinatra::Application
+get '/' do
+  haml :index
+end
 
-  get '/' do
-    haml :index
+get '/validator' do
+  "Sorry, only POST is supported."
+end
+
+post '/validator' do
+  version = params[:version]
+
+  unless (version && Validator::PBCORE_VERSIONS[version])
+    @errors = {}
+    @errors[:fail] = ["You must select a PBCore version to validate against."]
   end
 
-  get '/validator' do
-    "Sorry, only POST is supported."
+  if params[:file] && params[:file][:tempfile] && params[:file][:tempfile].size > 0
+    input = params[:file][:tempfile]
+  elsif !params[:textarea].strip.empty?
+    input = params[:textarea]
+  else
+    @errors = {}
+    @errors[:fail] = []
+    @errors[:fail] << "You must provide a PBCore document either by file upload or by pasting into the textarea."
   end
 
-  post '/validator' do
-    version = params[:version]
-
-    unless (version && Validator::PBCORE_VERSIONS[version])
-      @errors = {}
-      @errors[:fail] = ["You must select a PBCore version to validate against."]
-    end
-
-    if params[:file] && params[:file][:tempfile] && params[:file][:tempfile].size > 0
-      input = params[:file][:tempfile]
-    elsif !params[:textarea].strip.empty?
-      input = params[:textarea]
-    else
-      @errors = {}
-      @errors[:fail] = []
-      @errors[:fail] << "You must provide a PBCore document either by file upload or by pasting into the textarea."
-    end
-
-    if input
-      @validator = Validator.new(input, version, {best_practices: params[:best_practices], vocabs: params[:vocabs]})
-    end
-
-    @errors = @validator.errors unless @errors
-
-    haml :validator
+  if input
+    @validator = Validator.new(input, version, {best_practices: params[:best_practices], vocabs: params[:vocabs]})
   end
 
-  get '/css' do
-    content_type "text/css", :charset => "utf-8"
-    response['Cache-Control'] = 'public, max-age=7200'
-    sass :style
-  end
+  @errors = @validator.errors unless @errors
 
+  haml :validator
+end
+
+get '/css' do
+  content_type "text/css", :charset => "utf-8"
+  response['Cache-Control'] = 'public, max-age=7200'
+  sass :style
 end
