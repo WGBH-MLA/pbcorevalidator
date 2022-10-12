@@ -27,7 +27,7 @@ get '/' do
 end
 
 get '/validator' do
-  "Sorry, only POST is supported."
+  "Pardon, only POST is supported."
 end
 
 post '/validator' do

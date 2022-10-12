@@ -3,7 +3,7 @@ gem 'sinatra'
 ruby "2.5.1"
 
 # other dependencies
-gem 'haml'
+gem 'haml', '5.0.4'
 gem 'libxml-ruby'
 gem 'rack'
 gem 'shotgun'
