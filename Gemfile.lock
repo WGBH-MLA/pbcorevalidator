@@ -53,7 +53,7 @@ PLATFORMS
 DEPENDENCIES
   RedCloth
   bundler
-  haml (= 5.0.4)
+  haml
   haml-contrib
   libxml-ruby
   pry
@@ -64,9 +64,6 @@ DEPENDENCIES
   thin
   tilt
   yard
-
-RUBY VERSION
-   ruby 2.5.1p57
 
 BUNDLED WITH
    2.0.2

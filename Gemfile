@@ -1,9 +1,8 @@
 source 'https://rubygems.org'
 gem 'sinatra'
-ruby "2.5.1"
 
 # other dependencies
-gem 'haml', '5.0.4'
+gem 'haml'
 gem 'libxml-ruby'
 gem 'rack'
 gem 'shotgun'
