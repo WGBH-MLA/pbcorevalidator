@@ -6,10 +6,69 @@
   <h2>Validate a document</h2>
   <form action="/validator" method="POST", enctype="multipart/form-data">
     <p>
-      <label for="file">Selecta a file to validate:
+      <label for="file">Select a a file to validate:
         <input id="file" name="file" type="file" />
       </label>
     </p>
-    
+    <p>
+      <label style="padding-bottom: 1em;" for="textarea"> <strong>or</strong> paste a PBCore document into the textbox:
+        <textarea style="padding-bottom: 1em;" id="textarea" name="textarea" rows=5 cols=80 />
+      </label>
+    </p>
+
+    <p>
+      <label for="version"> PBCore Version:
+        <select>
+          <% Validator::PBCORE_VERSION.sort.each do |code, version| %>
+
+            <option value="<%= code %>" <%= code == "2.1" ? "selected" : "" %> ><%= version[:version] %></option>
+          <% end %>
+        </select>
+      </label>
+    </p>
+
+
+    <p>
+      <b>Additional Validations:</b>
+      <input type="checkbox" name="vocabs" />
+      <label for="vocabs"> Controlled Vocabularies</label>
+      <input type="checkbox" name="best_practices" />
+      <label for="best_practices"> Best Practices</label>
+    </p>
+
+    <p>
+      <input type="reset" value="Clear Form" class="button" />
+      <input type="submit" value="Validate PBCore" />
+    </p>
+
   </form>
 </div>
+
+
+<div id="content" class="box-gray">
+  <p>
+    This version of the PBCore Validator is currently maintained by WGBH. It was originally written by Mike Castleman and is copyright (c) 2009 by <a href="http://vermicel.li/">Roasted Vermicelli, LLC</a> and released under the terms of the <a href="http://www.gnu.org/licenses/gpl.html">GNU General Public License</a>, <a href="COPYING.txt">version 3</a> or later. An update was initiated on 10/07/2014 by Tessa Fallon for the AMIA/DLF Hack Day.
+  </p>
+
+  <p>
+    <i>This work employs PBCore. PBCore, the Public Broadcasting Metadata Dictionary, is licensed under a <a href="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International license</a>. (Full legal code available here.)</i>
+
+    PBCore, the Public Broadcasting Metadata Dictionary Project, was created by the public broadcasting community in the United States of America for use by public broadcasters and others. PBCore is built on the foundation of the Dublin Core (ISO 15836), an international standard for resource discovery. PBCore was developed with funding provided by the Corporation for Public Broadcasting and is maintained by WGBH. Copyright 2018, WGBH Educational Foundation, on behalf of the American Archive of Public Broadcasting.    
+  </p>
+
+</div>
+
+<div class="box-gray">
+  <p style="margin-bottom: 1em;">
+    The PBCore Validator was last updated as part of the PBCore Development and Training Project. The PBCore Development and Training Project has been made possible in part by a major grant from the National Endowment for the Humanities: Exploring the human endeavor.
+  </p>
+
+  <div style="width: auto; text-align:center; margin-left: auto; margin-right: auto;">
+    <img src="/neh-logo.png" style="width: 18em;" />
+  </div>
+
+</div>
+
+
+
+
