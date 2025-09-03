@@ -19,7 +19,7 @@
     <p>
       <label for="version"> PBCore Version:
         <select>
-          <% Validator::PBCORE_VERSION.sort.each do |code, version| %>
+          <% Validator::PBCORE_VERSIONS.sort.each do |code, version| %>
 
             <option value="<%= code %>" <%= code == "2.1" ? "selected" : "" %> ><%= version[:version] %></option>
           <% end %>
