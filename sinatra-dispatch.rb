@@ -21,7 +21,7 @@ require 'sinatra'
 require_relative './lib/validator'
 require 'haml'
 
-set :server, 'thin'
+set :server, 'puma'
 
 get '/' do
   haml :index
