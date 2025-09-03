@@ -24,8 +24,7 @@ require 'haml'
 set :server, 'puma'
 
 get '/' do
-  content_type :html
-  haml :index
+  erb :index
 end
 
 get '/validator' do
