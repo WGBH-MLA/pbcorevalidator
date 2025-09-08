@@ -48,6 +48,10 @@ post '/validator' do
     @errors[:fail] << "You must provide a PBCore document either by file upload or by pasting into the textarea."
   end
 
+
+  puts "um hellooooo #{input}\n\n#{params}\n\n#{version}"
+
+  puts "seriously #{@validator}"
   if input
     @validator = Validator.new(input, version, {best_practices: params[:best_practices], vocabs: params[:vocabs]})
   end
