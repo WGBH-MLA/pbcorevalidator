@@ -19,7 +19,6 @@
 
 require 'sinatra'
 require_relative './lib/validator'
-require 'haml'
 
 set :server, 'puma'
 
@@ -55,7 +54,7 @@ post '/validator' do
 
   @errors = @validator.errors unless @errors
 
-  haml :validator
+  erb :validator
 end
 
 get '/css' do
