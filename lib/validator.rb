@@ -139,7 +139,7 @@ class Validator
   #
   # io_or_document can either be an IO object or a String containing an XML document.
   def initialize(io_or_document, pbcore_version = "2.1", options)
-    XML.default_line_numbers = true
+    # XML.default_line_numbers = true
     @options = options
 
     # best_practices is hash to record line numbers - it will be converted to array once we have the full best_practices error list
