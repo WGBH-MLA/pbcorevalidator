@@ -51,10 +51,11 @@ post '/validator' do
 
   puts "um hellooooo #{input}\n\n#{params}\n\n#{version}"
 
-  puts "seriously #{@validator}"
   if input
     @validator = Validator.new(input, version, {best_practices: params[:best_practices], vocabs: params[:vocabs]})
   end
+  puts "seriously #{@validator}\n\n"
+  puts "more so #{@errors}\n\n"
 
   @errors = @validator.errors unless @errors
 
