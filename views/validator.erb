@@ -61,7 +61,7 @@
         <% end %>
 
 
-        <% if @validator && !validator.valid_xml? %>
+        <% if @validator && !@validator.valid_xml? %>
           <div class="box-gray">
             <p>
               Note that these errors indicate that your input could not even be parsed as XML. Please fix those errors in order to allow the PBCore-specific checks to be run.
