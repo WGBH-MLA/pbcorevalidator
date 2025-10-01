@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [[ $(/usr/sbin/lsof -ti :4567) ]]; then
+if [[ /usr/sbin/lsof -ti :4567 ]]; then
     echo "Server already running... Cool!"
 else
     echo "Starting reg Server"
