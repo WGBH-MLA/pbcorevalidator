@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PBCore Validator</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <script type="module" src="js/app.js"></script>
+</head>
+<body>
+  <div class="box-gray">
+    <h1>PBCore Validator</h1>
+  </div>
+
+  <noscript>
+    <div class="box-gray">
+      <p><span class="failure">JavaScript is required.</span> The PBCore Validator runs entirely in your browser, so please enable JavaScript to use it.</p>
+    </div>
+  </noscript>
+
+  <div id="results" aria-live="polite" hidden></div>
+
+  <div id="validator-view">
+    <div class="box-gray">
+      The PBCore Validator can detect certain types of errors and deviations from "best practices" in the records using the <a href="http://pbcore.org">PBCore</a> metadata schema. For more information about PBCore, visit http://pbcore.org.
+    </div>
+
+    <div class="box-gray">
+      <h2>Validate a document</h2>
+      <form id="validator-form">
+        <p>
+          <label for="file">Select a file to validate:</label>
+          <input id="file" name="file" type="file">
+        </p>
+        <p>
+          <label for="textarea" style="padding-bottom: 1em;"><strong>or</strong> paste a PBCore document into the textbox:</label>
+          <textarea id="textarea" name="textarea" rows="5" cols="80" style="padding-bottom: 1em;"></textarea>
+        </p>
+        <p>
+          <label for="version">PBCore Version:</label>
+          <select id="version" name="version"></select>
+        </p>
+        <p>
+          <b>Additional Validations:</b>
+          <input type="checkbox" id="vocabs" name="vocabs">
+          <label for="vocabs">Controlled Vocabularies</label>
+          <input type="checkbox" id="best_practices" name="best_practices">
+          <label for="best_practices">Best Practices</label>
+        </p>
+        <p>
+          <input type="reset" value="Clear Form" class="button">
+          <input type="submit" value="Validate PBCore" class="button s">
+        </p>
+      </form>
+    </div>
+
+    <div class="box-gray">
+      <div id="content">
+        <p>
+          This version of the PBCore Validator is currently maintained by WGBH. It was originally written by Mike Castleman and is copyright (c) 2009 by <a href="http://vermicel.li/">Roasted Vermicelli, LLC</a> and released under the terms of the <a href="http://www.gnu.org/licenses/gpl.html">GNU General Public License</a>, <a href="COPYING.txt">version 3</a> or later. An update was initiated on 10/07/2014 by Tessa Fallon for the AMIA/DLF Hack Day.
+        </p>
+        <p>
+          <i>This work employs PBCore.</i>
+          PBCore, the Public Broadcasting Metadata Dictionary, is licensed under a <a href="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International license</a>. (Full legal code available here.)
+          <i>PBCore, the Public Broadcasting Metadata Dictionary Project, was created by the public broadcasting community in the United States of America for use by public broadcasters and others. PBCore is built on the foundation of the Dublin Core (ISO 15836), an international standard for resource discovery. PBCore was developed with funding provided by the Corporation for Public Broadcasting and is maintained by WGBH. Copyright 2018, WGBH Educational Foundation, on behalf of the American Archive of Public Broadcasting.</i>
+        </p>
+      </div>
+    </div>
+
+    <div class="box-gray">
+      <p style="margin-bottom: 1em;">
+        The PBCore Validator was last updated as part of the PBCore Development and Training Project. The PBCore Development and Training Project has been made possible in part by a major grant from the National Endowment for the Humanities: Exploring the human endeavor.
+      </p>
+      <div style="width: auto; text-align: center; margin-left: auto; margin-right: auto;">
+        <img src="neh-logo.png" alt="National Endowment for the Humanities" style="width: 18em;">
+      </div>
+    </div>
+  </div>
+</body>
+</html>
