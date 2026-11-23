@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pbcoreInstantiationDocument xmlns="http://www.pbcore.org/PBCore/PBCoreNamespace.html"
+                             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                             xml:lang="en">
+  <instantiationIdentifier>no source here</instantiationIdentifier>
+  <instantiationDigital>video/mp4</instantiationDigital>
+  <instantiationPhysical>vhs</instantiationPhysical>
+  <instantiationPhysical>Cassette</instantiationPhysical>
+  <instantiationPhysical> </instantiationPhysical>
+  <instantiationLocation>a</instantiationLocation>
+  <instantiationLocation>b</instantiationLocation>
+  <instantiationMediaType>Moving Image</instantiationMediaType>
+  <instantiationMediaType>Video</instantiationMediaType>
+  <instantiationFileSize unitsOfMeasure="bytes">1,024</instantiationFileSize>
+  <instantiationDuration
+      xsi:nil="false"
+      >01:02:03.5</instantiationDuration>
+  <instantiationDuration>1 hour</instantiationDuration>
+  <instantiationChannelConfiguration>stereo</instantiationChannelConfiguration>
+  <instantiationChannelConfiguration>mono</instantiationChannelConfiguration>
+  <instantiationRights/>
+  <instantiationPart>
+    <instantiationIdentifier source="x">p</instantiationIdentifier>
+    <instantiationTracks>1</instantiationTracks>
+    <instantiationTracks>2</instantiationTracks>
+  </instantiationPart>
+  <instantiationPart/>
+  <instantiationExtension>
+    <extensionWrap>
+      <extensionElement>e</extensionElement>
+      <extensionValue>v</extensionValue>
+    </extensionWrap>
+    <extensionWrap>
+      <extensionElement>e</extensionElement>
+      <extensionElement>f</extensionElement>
+      <extensionValue>v</extensionValue>
+    </extensionWrap>
+    <extensionEmbedded>e</extensionEmbedded>
+  </instantiationExtension>
+  <instantiationEssenceTrack>
+    <essenceTrackFrameSize>720x486</essenceTrackFrameSize>
+    <essenceTrackFrameRate>29.97 fps</essenceTrackFrameRate>
+    <essenceTrackAspectRatio>4:3</essenceTrackAspectRatio>
+    <essenceTrackBitDepth>24 bit</essenceTrackBitDepth>
+    <essenceTrackSamplingRate>48,000</essenceTrackSamplingRate>
+    <essenceTrackDuration>00:00:01;12</essenceTrackDuration>
+    <essenceTrackTimeStart>start</essenceTrackTimeStart>
+    <essenceTrackLanguage>english;fre</essenceTrackLanguage>
+    <essenceTrackDataRate>é</essenceTrackDataRate>
+  </instantiationEssenceTrack>
+  <pbcoreAssetDate dateType="created">2020-02-30</pbcoreAssetDate>
+  <pbcoreAssetDate dateType="Digitized">0000</pbcoreAssetDate>
+  <pbcoreAssetDate dateType="nope">12345</pbcoreAssetDate>
+  <pbcoreAssetDate dateType="created">
+2020</pbcoreAssetDate>
+  <pbcoreTitle titleType="Program">Hello, world</pbcoreTitle>
+  <pbcoreDescription descriptionType="Event">Done</pbcoreDescription>
+  <other:pbcoreTitle xmlns:other="urn:other" titleType="Bogus">not in the PBCore namespace</other:pbcoreTitle>
+</pbcoreInstantiationDocument>

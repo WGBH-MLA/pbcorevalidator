@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pbcoreCollection [
+  <!ENTITY note "a > b">
+]>
+<pbcoreCollection xmlns="http://www.pbcore.org/PBCore/PBCoreNamespace.html" xmlns:x="urn:example">
+  <pbcoreDescriptionDocument>
+    <pbcoreAssetType>Program</pbcoreAssetType>
+    <assetType>Programme</assetType>
+    <pbcoreAssetDate dateType="Broadcast">2018/01/02</pbcoreAssetDate>
+    <pbcoreAssetDate dateType="">2018-1-2</pbcoreAssetDate>
+    <pbcoreAssetDate dateType="published">2018</pbcoreAssetDate>
+    <pbcoreIdentifier xmlns:source="urn:other">no-source-attribute</pbcoreIdentifier>
+    <pbcoreIdentifier x:source="prefixed">prefixed-source</pbcoreIdentifier>
+    <pbcoreTitle titleType="Series">A; B</pbcoreTitle>
+    <pbcoreSubject>
+      <subject>one, two</subject>
+    </pbcoreSubject>
+    <pbcoreDescription descriptionType="summary"><![CDATA[Cdata, with comma]]></pbcoreDescription>
+    <pbcoreDescription descriptionType="Blurb">  </pbcoreDescription>
+    <!-- <pbcoreIdentifier>commented out</pbcoreIdentifier> -->
+    <pbcoreRelation>
+      <pbcoreRelationType>Is Part Of</pbcoreRelationType>
+      <pbcoreRelationType>Has Part</pbcoreRelationType>
+      <relationType>Is Sibling Of</relationType>
+    </pbcoreRelation>
+    <pbcoreCoverage>
+      <coverage>a</coverage>
+      <coverage>b</coverage>
+      <coverageType>Spacial</coverageType>
+    </pbcoreCoverage>
+    <pbcoreCreator>
+      <creator>A</creator>
+      <creatorRole>Director</creatorRole>
+    </pbcoreCreator>
+    <pbcoreContributor>
+      <contributor>A</contributor>
+      <contributor>B</contributor>
+      <contributorRole>Chef</contributorRole>
+    </pbcoreContributor>
+    <pbcorePublisher>
+      <publisher>P</publisher>
+      <publisherRole>Pub</publisherRole>
+    </pbcorePublisher>
+    <pbcoreRightsSummary>
+      <rightsSummary>a</rightsSummary>
+      <rightsLink>b</rightsLink>
+    </pbcoreRightsSummary>
+    <pbcoreInstantiation>
+      <formatPhysical>Betacamm</formatPhysical>
+      <formatDigital>video/mp4</formatDigital>
+      <formatMediaType>Film</formatMediaType>
+      <instantiationRights>
+        <rightsSummary>a</rightsSummary>
+      </instantiationRights>
+      <instantiationRights>
+        <rightsSummary>a</rightsSummary>
+        <rightsEmbedded>b</rightsEmbedded>
+      </instantiationRights>
+      <instantiationDate>20180102</instantiationDate>
+      <instantiationLanguage>eng;fre;</instantiationLanguage>
+      <instantiationLanguage>;eng;;f</instantiationLanguage>
+      <instantiationLanguage>;;</instantiationLanguage>
+      <instantiationFileSize> </instantiationFileSize>
+      <instantiationFileSize>12.5/3:4x6</instantiationFileSize>
+      <instantiationDataRate>128 kbps</instantiationDataRate>
+      <instantiationTimeStart>00:00:00;00</instantiationTimeStart>
+      <instantiationDuration>1.5s</instantiationDuration>
+      <instantiationPart>
+        <instantiationDuration>1</instantiationDuration>
+      </instantiationPart>
+    </pbcoreInstantiation>
+    <pbcoreExtension>
+      <extensionWrap>
+        <extensionElement>e</extensionElement>
+      </extensionWrap>
+      <extensionEmbedded>ünïcödé ✓</extensionEmbedded>
+    </pbcoreExtension>
+    <pbcoreExtension/>
+  </pbcoreDescriptionDocument>
+  <pbcoreDescriptionDocument/>
+</pbcoreCollection>

@@ -1,0 +1,35 @@
+{
+  "bestPractices": [
+    "Element 'instantiationPhysical' near line 4 isn’t repeatable. For valid PBCore, please find another way to incorporate that information.  ",
+    "Element 'instantiationLocation' near line 4 isn’t repeatable. For valid PBCore, please find another way to incorporate that information.  ",
+    "Element 'instantiationMediaType' near line 4 isn’t repeatable. For valid PBCore, please find another way to incorporate that information.  ",
+    "Element 'instantiationDuration' near line 4 isn’t repeatable. For valid PBCore, please find another way to incorporate that information.  ",
+    "Element 'instantiationChannelConfiguration' near line 4 isn’t repeatable. For valid PBCore, please find another way to incorporate that information.  ",
+    "Element 'instantiationChannelConfiguration' near line 4 isn’t repeatable. For valid PBCore, please find another way to incorporate that information.  ",
+    "Element 'instantiationIdentifier' at line 5 must contain the attribute 'source' ",
+    "Element 'instantiationFileSize' at line 14 contains unexpected 1 characters. For best practice, this technical element should only contain numeric values. To express a unit of measure for this element, we recommend using the @unitsOfMeasure attribute.",
+    "Element 'instantiationDuration' at line 18 contains unexpected 5 characters. Best practice is to use a timestamp format for this element, such as HH:MM:SS:FF or HH:MM:SS.mmm or S.mmm.",
+    "Element 'instantiationRights' near line 21 should contain only one subelement.  Please repeat the entire instantiationRights container element for each rightsSummary, rightsLink, or rightsEmbedded.",
+    "Element 'instantiationPart' near line 22 is missing required subelement 'instantiationLocation.'  For valid PBCore, please add a value for this element. ",
+    "Element 'instantiationTracks' near line 22 isn’t repeatable. For valid PBCore, please find another way to incorporate that information.  ",
+    "Element 'instantiationPart' near line 27 is missing required subelement 'instantiationIdentifier.'  For valid PBCore, please add a value for this element. ",
+    "Element 'instantiationPart' near line 27 is missing required subelement 'instantiationLocation.'  For valid PBCore, please add a value for this element. ",
+    "Element 'instantiationExtension' near line 28 should contain only one subelement.  Please repeat the entire 'instantiationExtension' container element for each 'extensionWrap' or 'extensionEmbedded'",
+    "Element 'extensionWrap' near line 33 must contain one 'extensionElement' subelement.",
+    "Element 'essenceTrackFrameRate' at line 42 contains unexpected 4 characters. For best practice, this technical element should only contain numeric values. To express a unit of measure for this element, we recommend using the @unitsOfMeasure attribute.",
+    "Element 'essenceTrackBitDepth' at line 44 contains unexpected 4 characters. For best practice, this technical element should only contain numeric values. To express a unit of measure for this element, we recommend using the @unitsOfMeasure attribute.",
+    "Element 'essenceTrackSamplingRate' at line 45 contains unexpected 1 characters. For best practice, this technical element should only contain numeric values. To express a unit of measure for this element, we recommend using the @unitsOfMeasure attribute.",
+    "Element 'essenceTrackTimeStart' at line 47 contains unexpected 5 characters. Best practice is to use a timestamp format for this element, such as HH:MM:SS:FF or HH:MM:SS.mmm or S.mmm.",
+    "Element 'essenceTrackLanguage' at line 48 contains 1 unexpected value. Best practice is to use one of the ISO 639.2 or 639.3 standard language codes, which can be found at http://www.loc.gov/standards/iso639-2/ and http://www-01.sil.org/iso639-3/codes.asp. You can describe more than one language in the element by separating two three-letter codes with a semicolon, i.e. eng;fre.",
+    "Element 'essenceTrackDataRate' at line 49 contains unexpected 1 characters. For best practice, this technical element should only contain numeric values. To express a unit of measure for this element, we recommend using the @unitsOfMeasure attribute.",
+    "Element 'pbcoreAssetDate' at line 53: The recommended formats for date fields are: YYYY-MM-DD, YYYY-MM, and YYYY.",
+    "Element 'pbcoreAssetDate' at line 54: The recommended formats for date fields are: YYYY-MM-DD, YYYY-MM, and YYYY."
+  ],
+  "vocabs": [
+    "“nope” on line 53 is not in the PBCore suggested controlled vocabulary for dateType. While that is valid, you may want to see if there is an appropriate term in the vocabulary here: http://pbcore.org/pbcore-controlled-vocabularies/datetype-vocabulary/.",
+    "“Bogus” on line 58 is not in the PBCore suggested controlled vocabulary for titleType. While that is valid, you may want to see if there is an appropriate term in the vocabulary here: http://pbcore.org/pbcore-controlled-vocabularies/titletype-vocabulary/.",
+    "“Cassette” on line 8 is not in the PBCore suggested controlled vocabulary for instantiationPhysical. While that is valid, you may want to see if there is an appropriate term in the vocabulary here: Audio: http://pbcore.org/pbcore-controlled-vocabularies/instantiationphysical-audio-vocabulary/, Film: http://pbcore.org/pbcore-controlled-vocabularies/instantiationphysical-film-vocabulary/. and Video: http://pbcore.org/pbcore-controlled-vocabularies/instantiationphysical-video-vocabulary/.",
+    "instantiationPhysical on 9 is empty. Perhaps consider leaving that element out instead.",
+    "“Video” on line 13 is not in the PBCore suggested controlled vocabulary for instantiationMediaType. While that is valid, you may want to see if there is an appropriate term in the vocabulary here: http://pbcore.org/pbcore-controlled-vocabularies/instantiationmediatype-vocabulary/."
+  ]
+}

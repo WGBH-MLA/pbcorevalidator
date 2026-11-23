@@ -1,0 +1,38 @@
+{
+  "bestPractices": [
+    "Element 'pbcoreAssetDate' at line 9: The recommended formats for date fields are: YYYY-MM-DD, YYYY-MM, and YYYY.",
+    "Element 'pbcoreIdentifier' at line 12 must contain the attribute 'source' ",
+    "In subject on line 16, you have entered “one, two”, which looks like it may be a list. It is preferred instead to repeat the containing element.",
+    "Element 'pbcoreRelation' near line 21 must contain two subelements and only one 'pbcoreRelationType.'  Please repeat the entire 'pbcoreRelation' container element to express each relationship.",
+    "Element 'pbcoreRelation' near line 21 must contain two subelements and only one 'pbcoreRelationIdentifier.'  Please repeat the entire 'pbcoreRelation' container element to express each relationship.",
+    "Element 'pbcoreCoverage' near line 26 should contain only one 'coverage' subelement.  Please repeat the entire pbcoreCoverage container element for each instance of coverage.",
+    "Element 'pbcoreContributor' near line 35 should contain only one 'contributor' subelement.  Please repeat the entire pbcoreContributor container element for each instance of contributor.",
+    "Element 'pbcoreRightsSummary' near line 44 should contain only one subelement.  Please repeat the entire pbcoreRightsSummary container element for each rightsSummary, rightsLink, or rightsEmbedded.",
+    "It looks like the instantiation on line 48 contains both a formatDigital and a formatPhysical element. This is valid, but not recommended in PBCore XML.",
+    "Element 'instantiationRights' near line 55 should contain only one subelement.  Please repeat the entire instantiationRights container element for each rightsSummary, rightsLink, or rightsEmbedded.",
+    "Element 'instantiationDate' at line 59: The recommended formats for date fields are: YYYY-MM-DD, YYYY-MM, and YYYY.",
+    "Element 'instantiationLanguage' at line 61 contains 3 unexpected values. Best practice is to use one of the ISO 639.2 or 639.3 standard language codes, which can be found at http://www.loc.gov/standards/iso639-2/ and http://www-01.sil.org/iso639-3/codes.asp. You can describe more than one language in the element by separating two three-letter codes with a semicolon, i.e. eng;fre.",
+    "Element 'instantiationFileSize' at line 63 contains unexpected 1 characters. For best practice, this technical element should only contain numeric values. To express a unit of measure for this element, we recommend using the @unitsOfMeasure attribute.",
+    "Element 'instantiationDataRate' at line 65 contains unexpected 5 characters. For best practice, this technical element should only contain numeric values. To express a unit of measure for this element, we recommend using the @unitsOfMeasure attribute.",
+    "Element 'instantiationDuration' at line 67 contains unexpected 1 characters. Best practice is to use a timestamp format for this element, such as HH:MM:SS:FF or HH:MM:SS.mmm or S.mmm.",
+    "Element 'instantiationPart' near line 68 is missing required subelement 'instantiationIdentifier.'  For valid PBCore, please add a value for this element. ",
+    "Element 'instantiationPart' near line 68 is missing required subelement 'instantiationLocation.'  For valid PBCore, please add a value for this element. ",
+    "Element 'pbcoreExtension' near line 72 should contain only one subelement.  Please repeat the entire 'pbcoreExtension' container element for each 'extensionWrap' or 'extensionEmbedded'",
+    "Element 'extensionWrap' near line 73 must contain one 'extensionValue' subelement.",
+    "Element 'pbcoreExtension' near line 78 should contain only one subelement.  Please repeat the entire 'pbcoreExtension' container element for each 'extensionWrap' or 'extensionEmbedded'",
+    "Element 'pbcoreDescriptionDocument' near line 80 is missing required subelement 'pbcoreIdentifier.'  For valid PBCore, please add a value for this element. ",
+    "Element 'pbcoreDescriptionDocument' near line 80 is missing required subelement 'pbcoreTitle.'  For valid PBCore, please add a value for this element. ",
+    "Element 'pbcoreDescriptionDocument' near line 80 is missing required subelement 'pbcoreDescription.'  For valid PBCore, please add a value for this element. "
+  ],
+  "vocabs": [
+    "“Programme” on line 8 is not in the PBCore suggested controlled vocabulary for assetType. While that is valid, you may want to see if there is an appropriate term in the vocabulary here: http://pbcore.org/pbcore-controlled-vocabularies/.",
+    "dateType on 10 is empty. Perhaps consider leaving that element out instead.",
+    "“Blurb” on line 19 is not in the PBCore suggested controlled vocabulary for descriptionType. While that is valid, you may want to see if there is an appropriate term in the vocabulary here: http://pbcore.org/pbcore-controlled-vocabularies/descriptiontype-vocabulary/.",
+    "“Is Sibling Of” on line 24 is not in the PBCore suggested controlled vocabulary for relationType. While that is valid, you may want to see if there is an appropriate term in the vocabulary here: http://pbcore.org/pbcore-controlled-vocabularies/pbcorerelationtype-vocabulary/ and http://pbcore.org/pbcore-controlled-vocabularies/instatiationrelationtype-vocabulary/",
+    "“Chef” on line 38 is not in the PBCore suggested controlled vocabulary for contributorRole. While that is valid, you may want to see if there is an appropriate term in the vocabulary here: http://pbcore.org/pbcore-controlled-vocabularies/creatorrole-and-contributorrole-vocabulary/.",
+    "“Pub” on line 42 is not in the PBCore suggested controlled vocabulary for publisherRole. While that is valid, you may want to see if there is an appropriate term in the vocabulary here: http://pbcore.org/pbcore-controlled-vocabularies/publisherrole-vocabulary/.",
+    "“Betacamm” on line 49 is not in the PBCore suggested controlled vocabulary for formatPhysical. While that is valid, you may want to see if there is an appropriate term in the vocabulary here: Audio: http://pbcore.org/pbcore-controlled-vocabularies/instantiationphysical-audio-vocabulary/, Film: http://pbcore.org/pbcore-controlled-vocabularies/instantiationphysical-film-vocabulary/. and Video: http://pbcore.org/pbcore-controlled-vocabularies/instantiationphysical-video-vocabulary/.",
+    "“Film” on line 51 is not in the PBCore suggested controlled vocabulary for formatMediaType. While that is valid, you may want to see if there is an appropriate term in the vocabulary here: http://pbcore.org/pbcore-controlled-vocabularies/instantiationmediatype-vocabulary/.",
+    "“Spacial” on line 29 is not in the PBCore suggested controlled vocabulary for coverageType. While that is valid, you may want to see if there is an appropriate term in the vocabulary here: "
+  ]
+}
