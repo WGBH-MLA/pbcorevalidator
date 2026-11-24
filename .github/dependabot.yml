@@ -1,0 +1,16 @@
+version: 2
+updates:
+# GitHub Actions
+- package-ecosystem: github-actions
+  directory: .github/workflows
+  schedule:
+    interval: monthly
+    day: wednesday
+    time: '06:00'
+    timezone: US/Eastern
+  commit-message:
+    prefix: ⬆
+  cooldown:
+    default-days: 1
+  labels:
+  - maintenance 🔧
